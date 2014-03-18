@@ -60,7 +60,7 @@ for (j in 1:numStorms) {
     } else {adaps_data_storm$volume[i] <- NA}
   }
   adaps_samp_storm <- adaps_data_samples[which(StartDt<=adaps_data_samples$datetime&adaps_data_samples$datetime<=EndDt),]
-  if (nrow(adaps_samp_storm)==0) {cat(paste("Storm event specified which has no samples","\n",sep=" "))}
+  if (nrow(adaps_samp_storm)==0) {cat(paste(StormName[j],"Storm event specified which has no samples","\n",sep=" "))}
   if (subNum[1]>0) {subStart<-subNum[j]} else {subStart<-1}
   subMax <- nrow(adaps_samp_storm)+(subStart-1)
   adaps_samp_storm$subNum <- c(subStart:subMax)

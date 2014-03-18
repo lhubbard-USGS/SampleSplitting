@@ -93,7 +93,7 @@ for (j in 1:numStorms) {
       adaps_data_storm_temp <- rbind(adaps_data_storm_temp,adaps_data_storm_temp_start)
     }
       
-    adaps_samp_storm$volume[i] <- round(sum(adaps_data_storm_temp$volume))
+    adaps_samp_storm$volume[i] <- round(sum(adaps_data_storm_temp$volume,na.rm=TRUE))
     adaps_samp_storm$sampStar[i] <- sampStart
     adaps_samp_storm$sampEnd[i] <- sampEnd
     adaps_data_storm_temp$samplesNum <- rep(adaps_samp_storm$subNum[i],nrow(adaps_data_storm_temp))

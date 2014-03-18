@@ -64,7 +64,7 @@ if ((length(unique(POR$parameter_cd))+length(unique(POR$parameter_cd)))>=3) {
   adaps_data$p00060 <- as.numeric(adaps_data$p00060)
   adaps_data$p00045 <- as.numeric(adaps_data$p00045)
   adaps_data_all <- data.frame(adaps_data,rep("USGS",nrow(adaps_data)),rep(siteNo,nrow(adaps_data)),stringsAsFactors=FALSE)
-  colnames(adaps_data_all) <- c("datetime","X06_99234","X04_00045","X02_00060","X01_00065","agency_cd","site_no")
+  colnames(adaps_data_all) <- c("datetime","X06_99234","X04_00045","X01_00065","X02_00060","agency_cd","site_no")
 }
 for (i in 1:nrow(adaps_data_all)) {
   adaps_data_all$cum_00045[i] <- sum(adaps_data_all$X04_00045[1:i],na.rm=TRUE)

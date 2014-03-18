@@ -1,0 +1,21 @@
+\name{mergedDataTable}
+\alias{mergedDataTable}
+\title{Function to save merged data for station/storm event, saved as file, eg 434425090462401data.txt}
+\usage{
+mergedDataTable(siteNo, StartDt, EndDt, adaps_data_all)
+}
+\arguments{
+  \item{siteNo}{USGS station id}
+
+  \item{StartDt}{start of storm event}
+
+  \item{EndDt}{end of storm event}
+
+  \item{adaps_data_all}{data frame of event data}
+}
+\description{
+This function accepts a siteNo, StartDt and EndDt and
+merged data data frame for a storm event, and generates a
+data file
+}
+

@@ -11,6 +11,6 @@ intermediateVolTable <- function(siteNo,StartDt,EndDt,tableOut){
   fileName <- paste(siteNo,"SampleVols.csv",sep="")
   sink(fileName)
   cat("Station:"," ",siteNo,"\t","Start date:"," ",strftime(StartDt),"\t","End date:"," ",strftime(EndDt),"\n\n")
-  write.table(tableOut[[length(StormStart)+1]],file="",sep=",",row.names=FALSE)
+  write.table(tableOut[[length(StartDt)+1]],file="",sep=",",row.names=FALSE)
   sink()
 }

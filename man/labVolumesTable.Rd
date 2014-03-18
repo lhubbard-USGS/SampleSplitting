@@ -2,7 +2,7 @@
 \alias{labVolumesTable}
 \title{Function to generate clean text file of sample amounts for lab}
 \usage{
-labVolumesTable(StormName, StormStart, StormEnd, tableOut)
+labVolumesTable(StormName, StormStart, StormEnd, tableOut, bottlePickup)
 }
 \arguments{
   \item{StormName}{vector of storm name(s)}
@@ -13,6 +13,8 @@ labVolumesTable(StormName, StormStart, StormEnd, tableOut)
 
   \item{tableOut}{list of data frames containing event
   data}
+
+  \item{bottlePickup}{date bottles were retrieved}
 }
 \description{
 This function accepts a vector of storm names, vector of

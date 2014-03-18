@@ -46,7 +46,7 @@ for (i in 1:length(StormStart)){
 }
 
 #Output csv file of all intermediate volumes used for calculations
-intermediateVolTable(siteNo,StartDt,EndDt,tableOut)
+intermediateVolTable(siteNo,StormStart,StormEnd,tableOut)
 
 #Once you are satisfied with the table output
 #enter date(s) when samples were picked up 
@@ -61,8 +61,8 @@ for (i in 1:length(StormStart)){
 }
 
 # generate text file with storm event sample bottle volume table(s)
-stormEventsTable(StormName,StormStart,StormEnd,tableOut)
+stormEventsTable(StormName,StormStart,StormEnd,tableOut,maxBottleVol,bottlePickup)
 
 # generate simple table for lab
-labVolumesTable(StormName,StormStart,StormEnd,tableOut)
+labVolumesTable(StormName,StormStart,StormEnd,tableOut,bottlePickup)
 

@@ -15,7 +15,7 @@
 #' hydrographInteractive(adaps_data_all)
 #' }
 hydrographInteractive <- function(adaps_data_all) {
-  adaps_data_samples <- adaps_data_all[which(adaps_data_all$X05_99234>0),c("datetime","X02_00060")]
+  adaps_data_samples <- adaps_data_all[which(adaps_data_all$X06_99234>0),c("datetime","X02_00060")]
   adaps_data_plot <- adaps_data_all[,c("datetime","cum_00045","X01_00065","X02_00060")]
   rain_data <- data.frame(adaps_data_all[,c("datetime","cum_00045")],rep("Rain",nrow(adaps_data_all)),rep(NA,nrow(adaps_data_all)),stringsAsFactors=FALSE)
   names(rain_data) <- c("datetime","value","name","label")

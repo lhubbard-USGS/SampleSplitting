@@ -6,8 +6,9 @@
 #' @param StormStart vector of storm start dates
 #' @param StormEnd vector of storm end dates
 #' @param tableOut list of data frames containing event data
+#' @param bottlePickup date bottles were retrieved
 #' @export
-labVolumesTable <- function(StormName,StormStart,StormEnd,tableOut){
+labVolumesTable <- function(StormName,StormStart,StormEnd,tableOut,bottlePickup){
   fileName <- paste(StormName[1],"labVolumes",".txt",sep="")
   sink(fileName)
   for (i in 1:length(StormName)) {

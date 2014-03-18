@@ -7,7 +7,7 @@
 #' @param siteNo string containing USGS gage number
 #' @export
 hydrographPDF <- function(adaps_data_all,storm_name,siteNo) {
-  adaps_data_samples <- adaps_data_all[which(adaps_data_all$X05_99234>0),c("datetime","X02_00060")]
+  adaps_data_samples <- adaps_data_all[which(adaps_data_all$X06_99234>0),c("datetime","X02_00060")]
   adaps_data_plot <- adaps_data_all[,c("datetime","cum_00045","X01_00065","X02_00060")]
   plot_00045 <- adaps_data_plot[which(!is.na(adaps_data_plot$cum_00045)),]
   plot_00060 <- adaps_data_plot[which(!is.na(adaps_data_plot$X02_00060)),]

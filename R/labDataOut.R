@@ -28,7 +28,7 @@
 #' labDataOut(adaps_data_all,StormStart,StormEnd,StormName,maxBottleVol,maxSampVol)
 #' }
 labDataOut <- function(adaps_data_all,StormStart,StormEnd,StormName,maxBottleVol,maxSampVol,removeDate="",subNum=-9) {
-adaps_data_samples <- adaps_data_all[which(adaps_data_all$X05_99234>0),c("datetime","X02_00060")]
+adaps_data_samples <- adaps_data_all[which(adaps_data_all$X06_99234>0),c("datetime","X02_00060")]
 adaps_data_plot <- adaps_data_all[,c("datetime","X01_00065","X02_00060")]
 
 if (length(removeDate)>0) {

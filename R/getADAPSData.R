@@ -35,11 +35,11 @@ if ((length(unique(POR$parameter_cd))+length(unique(POR$parameter_cd)))>=3) {
     scode_url <- constructNWISURL(siteNo,'99234',StartDt,EndDt,"uv",format="tsv",interactive=FALSE)
     scode_url <- paste(scode_url,"&access=3",sep="")
     adaps_scode_in <- getRDB1Data(scode_url,asDateTime=TRUE)
-    adaps_scode_in <- subset(adaps_scode_in,adaps_scode_in$X05_99234>900)
+    adaps_scode_in <- subset(adaps_scode_in,adaps_scode_in$X06_99234>900)
     adaps_data<-merge(adaps_stage_in[c(1,2,3,5)],adaps_discharge_in[c(3,5)],by="datetime",all=T)
     adaps_data<-merge(adaps_precip_in[c(3,5)],adaps_data,by="datetime",all=T)
     adaps_data_all <- merge(adaps_data,adaps_scode_in[c(3,5)],by="datetime",all=T)
-    colnames(adaps_data_all) <- c("datetime","X04_00045","agency_cd","site_no","X01_00065","X02_00060","X05_99234")
+    colnames(adaps_data_all) <- c("datetime","X04_00045","agency_cd","site_no","X01_00065","X02_00060","X06_99234")
   } else {cat(paste("ADAPS data not available on via NWISWeb for selected site, date range and parameter codes","\n",sep=" "))}
 }} else {
   adaps_data_in <- read.delim(dataFile,header=TRUE,quote="\"",dec=".",sep="\t",colClasses=c("character"),strip.white=TRUE,fill=TRUE,comment.char="#")
@@ -63,7 +63,7 @@ if ((length(unique(POR$parameter_cd))+length(unique(POR$parameter_cd)))>=3) {
   adaps_data$p00060 <- as.numeric(adaps_data$p00060)
   adaps_data$p00045 <- as.numeric(adaps_data$p00045)
   adaps_data_all <- data.frame(adaps_data,rep("USGS",nrow(adaps_data)),rep(siteNo,nrow(adaps_data)),stringsAsFactors=FALSE)
-  colnames(adaps_data_all) <- c("datetime","X05_99234","X04_00045","X02_00060","X01_00065","agency_cd","site_no")
+  colnames(adaps_data_all) <- c("datetime","X06_99234","X04_00045","X02_00060","X01_00065","agency_cd","site_no")
 }
 for (i in 1:nrow(adaps_data_all)) {
   adaps_data_all$cum_00045[i] <- sum(adaps_data_all$X04_00045[1:i],na.rm=TRUE)

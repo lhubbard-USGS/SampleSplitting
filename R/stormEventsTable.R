@@ -6,12 +6,14 @@
 #' @param StormStart vector of storm start dates
 #' @param StormEnd vector of storm end dates
 #' @param tableOut list of data frames containing event data
+#' @param maxBottleVol maximum bottle volume
+#' @param bottlePickup date bottles were retrieved
 #' @param removeComment vector of comments
 #' @export
-stormEventsTable <- function(StormName,StormStart,StormEnd,tableOut,removeComment=""){
+stormEventsTable <- function(StormName,StormStart,StormEnd,tableOut,maxBottleVol,bottlePickup,removeComment=""){
   fileName <- paste(StormName[1],"sampVol",".txt",sep="")
   sink(fileName)
-  for (i in 1:length(storm_name)) {
+  for (i in 1:length(StormName)) {
     cat(StormName[i],"\t",strftime(StormStart[i]),"\t",strftime(StormEnd[i]),"\n\n")
     print(tableOut[[i]],row.names=FALSE)
     cat("\n\n")

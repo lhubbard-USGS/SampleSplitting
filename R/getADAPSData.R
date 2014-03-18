@@ -48,6 +48,7 @@ if ((length(unique(POR$parameter_cd))+length(unique(POR$parameter_cd)))>=3) {
   adaps_data_in$pcode <- substr(adaps_data_in$NAME,mean(nchar(adaps_data_in$NAME))-4,mean(nchar(adaps_data_in$NAME)))
   adaps_scode <- adaps_data_in[which(adaps_data_in$pcode=="99234"),c("datetime","VALUE")]
   colnames(adaps_scode) <- c("datetime","p99234")
+  adaps_scode$p99234 <- as.numeric(adaps_scode$p99234)
   adaps_scode <- subset(adaps_scode,adaps_scode$p99234>900)
   adaps_stage <- adaps_data_in[which(adaps_data_in$pcode=="00065"),c("datetime","VALUE")]
   colnames(adaps_stage) <- c("datetime","p00065")

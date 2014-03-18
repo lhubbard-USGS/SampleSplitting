@@ -6,14 +6,15 @@ siteNo <- "434425090462401"
 StartDt <- '2012-06-20'
 # enter date to stop pulling data (rounded to the day)
 EndDt <- '2012-06-21'
+# enter NWIS station id for precipitation gaging station, may or may not be identical to "siteNo"
+precipSite <- "434425090462401"
 # enter the name of the storm(s) (for plot title)
 storm_name <- c("JF6-21")
 # enter path and name of data file if data is not web-available
 dataFile <- "M:/NonPoint Evaluation/GLRI Edge-of-field/Splitting Record Conversion to R/CASHTONTEST.RDB"
 
 # Retrieve data from NWISWeb (if available), or use file names to pull data in from files exported by ADAPS
-adaps_data_all <- getADAPSData(siteNo,StartDt,EndDt,dataFile)
-# example using files getADAPSData(siteNo,StartDt,EndDt,precipSite,stageFile="jf3stage.txt",dischFile="jf3disch.txt","jf3precip.txt","jf3scod.txt")
+adaps_data_all <- getADAPSData(siteNo,StartDt,EndDt,precipSite,dataFile)
 
 # save merged data for station/storm event, saved as file, eg 434425090462401data.txt 
 tableOut <- adaps_data_all[,c("agency_cd","site_no","datetime","X01_00065","X02_00060","X05_99234")]
@@ -22,6 +23,13 @@ sink(fileName)
 cat("Station:"," ",siteNo,"\t","Start date:"," ",strftime(StartDt),"\t","End date:"," ",strftime(EndDt),"\n\n")
 write.table(tableOut,file="",sep=",",row.names=FALSE)
 sink()
+
+# Generate interactive googleVis plot
+hydrographPlot <- hydrographInteractive(adaps_data_all)
+plot(hydrographPlot)
+
+# Generate pdf of hydrograph to save, saved as file, eg 434425090462401hydrograph.pdf 
+hydrographPDF(adaps_data_all,storm_name,siteNo)
 
 # enter the maximum possible volume for one sample bottle
 maxBottleVol <- c(800)

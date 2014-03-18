@@ -1,4 +1,6 @@
 export(getADAPSData)
+export(hydrographInteractive)
+export(hydrographPDF)
 export(labDataOut)
 import(dataRetrieval)
 import(googleVis)

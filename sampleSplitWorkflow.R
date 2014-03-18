@@ -1,5 +1,4 @@
-library(dataRetrieval)
-library(googleVis)
+library(sampleSplitting)
 # enter NWIS station id for gaging station
 siteNo <- "434425090462401"
 # enter date to begin pulling data (rounded to the day)

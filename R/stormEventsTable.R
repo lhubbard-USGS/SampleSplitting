@@ -12,6 +12,7 @@
 #' @export
 stormEventsTable <- function(StormName,StormStart,StormEnd,tableOut,maxBottleVol,bottlePickup,removeComment=""){
   fileName <- paste(StormName[1],"sampVol",".txt",sep="")
+  volSum <- 0
   sink(fileName)
   for (i in 1:length(StormName)) {
     cat(StormName[i],"\t",strftime(StormStart[i]),"\t",strftime(StormEnd[i]),"\n\n")
@@ -24,7 +25,10 @@ stormEventsTable <- function(StormName,StormStart,StormEnd,tableOut,maxBottleVol
     cat("Total Sampled Storm Volume","\t",sum(tableOut[[i]]$volume),"cubic feet\n\n")
     cat("Bottles ",tableOut[[i]]$subNum[1]," through ",tableOut[[i]]$subNum[length(tableOut[[i]]$subNum)]," picked up ",bottlePickup,"\n\n")
     if (length(removeComment[i])>0) {cat(removeComment[i],"\n\n")}
+    volSum <- sum(tableOut[[i]]$volume) + volSum
     cat("========================================================================================================","\n\n")
   }
+  cat("Total Storm Volume from subs",volSum,"\n\n")
+  cat("Total Storm Volume", sum(tableOut[[length(tableOut)]]$volume),"\n\n")
   sink()
 }

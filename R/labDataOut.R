@@ -72,24 +72,20 @@ for (j in 1:numStorms) {
   for (i in 1:samplesNum) {
     sampStart <- if (i>1) {adaps_samp_storm$datetime[i-1]+(.5*(adaps_samp_storm$datetime[i]-adaps_samp_storm$datetime[i-1]))} else {min(adaps_data_storm$datetime)}
     sampEnd <- if (i<samplesNum) {adaps_samp_storm$datetime[i]+(.5*(adaps_samp_storm$datetime[i+1]-adaps_samp_storm$datetime[i]))} else {max(adaps_data_storm$datetime)}
-    adaps_data_storm_temp <- adaps_data_storm[which(adaps_data_storm$datetime>=sampStart&adaps_data_storm$datetime<sampEnd),]
-    if (nrow(adaps_data_storm[which(adaps_data_storm$datetime==sampEnd),])==0) {
+    adaps_data_storm_temp <- adaps_data_storm[which(adaps_data_storm$datetime>=sampStart&adaps_data_storm$datetime<=sampEnd),]
+    if (nrow(adaps_data_storm[which(adaps_data_storm$datetime==sampEnd),])>0) {
       adaps_data_storm_temp$volume[nrow(adaps_data_storm_temp)] <- 0.5*(adaps_data_storm_temp$volume[nrow(adaps_data_storm_temp)])
-      adaps_data_storm_temp$datetime[nrow(adaps_data_storm_temp)] <- sampEnd
-    }
-    if (nrow(adaps_data_storm[which(adaps_data_storm$datetime==sampStart),])==0) {
-      adaps_data_storm_temp_start <- adaps_data_storm_temp[1,]
-      adaps_data_storm_temp_start$datetime <- sampStart
-      dischDate <- max(adaps_data_storm$datetime[which(adaps_data_storm$datetime<sampStart)])
-      adaps_data_storm_temp_start$volume <- 0.5*(adaps_data_storm$volume[which(adaps_data_storm$datetime==dischDate)])
-      adaps_data_storm_temp_start$X01_00065 <- adaps_data_storm$X01_00065[which(adaps_data_storm$datetime==dischDate)]
-      adaps_data_storm_temp_start$X02_00060 <- adaps_data_storm$X02_00060[which(adaps_data_storm$datetime==dischDate)]
-      adaps_data_storm_temp <- rbind(adaps_data_storm_temp_start,adaps_data_storm_temp)
-    }
-      
+      sampEndOut <- if (i<samplesNum) {sampEnd + 0.5*(min(adaps_data_storm$datetime[which(adaps_data_storm$datetime>sampEnd)])-sampEnd)} else {max(adaps_data_storm$datetime)}
+    } else {sampEndOut <- max(adaps_data_storm$datetime[which(adaps_data_storm$datetime<sampEnd)])}
+    if (nrow(adaps_data_storm[which(adaps_data_storm$datetime==sampStart),])>0) {
+      adaps_data_storm_temp$volume[1] <- 0.5*(adaps_data_storm_temp$volume[1])
+      sampStartOut <- if (i>1) {sampStart + 0.5*(min(adaps_data_storm$datetime[which(adaps_data_storm$datetime>sampStart)])-sampStart)} else {min(adaps_data_storm$datetime)}
+    } else {sampStartOut <- min(adaps_data_storm$datetime[which(adaps_data_storm$datetime>sampStart)])}
     adaps_samp_storm$volume[i] <- sum(adaps_data_storm_temp$volume,na.rm=TRUE)
-    adaps_samp_storm$sampStar[i] <- sampStart
-    adaps_samp_storm$sampEnd[i] <- sampEnd
+    adaps_data_storm_temp$datetime[1] <- sampStartOut
+    adaps_data_storm_temp$datetime[nrow(adaps_data_storm_temp)] <- sampEndOut
+    adaps_samp_storm$sampStar[i] <- sampStartOut
+    adaps_samp_storm$sampEnd[i] <- sampEndOut
     adaps_data_storm_temp$samplesNum <- rep(adaps_samp_storm$subNum[i],nrow(adaps_data_storm_temp))
     adaps_data_samp <- if (i+j>2) {rbind(adaps_data_samp,adaps_data_storm_temp)} else {adaps_data_storm_temp}
   }

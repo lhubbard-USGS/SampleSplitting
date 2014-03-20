@@ -74,15 +74,17 @@ for (j in 1:numStorms) {
     sampEnd <- if (i<samplesNum) {adaps_samp_storm$datetime[i]+(.5*(adaps_samp_storm$datetime[i+1]-adaps_samp_storm$datetime[i]))} else {max(adaps_data_storm$datetime)}
     adaps_data_storm_temp <- adaps_data_storm[which(adaps_data_storm$datetime>=sampStart&adaps_data_storm$datetime<sampEnd),]
     if (nrow(adaps_data_storm[which(adaps_data_storm$datetime==sampEnd),])==0) {
-      adaps_data_storm_temp_end <- adaps_data_storm_temp[1,]
-      adaps_data_storm_temp_end$datetime <- min(adaps_data_storm$datetime[which(adaps_data_storm$datetime>sampEnd)])
-      adaps_data_storm_temp_end$X01_00065 <- (adaps_data_storm$X01_00065[which(adaps_data_storm$datetime==adaps_data_storm_temp_end$datetime)])
-      adaps_data_storm_temp_end$X02_00060 <- (adaps_data_storm$X02_00060[which(adaps_data_storm$datetime==adaps_data_storm_temp_end$datetime)])
-      adaps_data_storm_temp_end$volume <- 0.5*(adaps_data_storm$volume[which(adaps_data_storm$datetime==adaps_data_storm_temp_end$datetime)])
-      adaps_data_storm_temp <- rbind(adaps_data_storm_temp,adaps_data_storm_temp_end)
+      adaps_data_storm_temp$volume[nrow(adaps_data_storm_temp)] <- 0.5*(adaps_data_storm_temp$volume[nrow(adaps_data_storm_temp)])
+      adaps_data_storm_temp$datetime[nrow(adaps_data_storm_temp)] <- sampEnd
     }
     if (nrow(adaps_data_storm[which(adaps_data_storm$datetime==sampStart),])==0) {
-      adaps_data_storm_temp$volume[1] <- 0.5*(adaps_data_storm_temp$volume[1])
+      adaps_data_storm_temp_start <- adaps_data_storm_temp[1,]
+      adaps_data_storm_temp_start$datetime <- sampStart
+      dischDate <- max(adaps_data_storm$datetime[which(adaps_data_storm$datetime<sampStart)])
+      adaps_data_storm_temp_start$volume <- 0.5*(adaps_data_storm$volume[which(adaps_data_storm$datetime==dischDate)])
+      adaps_data_storm_temp_start$X01_00065 <- adaps_data_storm$X01_00065[which(adaps_data_storm$datetime==dischDate)]
+      adaps_data_storm_temp_start$X02_00060 <- adaps_data_storm$X02_00060[which(adaps_data_storm$datetime==dischDate)]
+      adaps_data_storm_temp <- rbind(adaps_data_storm_temp_start,adaps_data_storm_temp)
     }
       
     adaps_samp_storm$volume[i] <- sum(adaps_data_storm_temp$volume,na.rm=TRUE)

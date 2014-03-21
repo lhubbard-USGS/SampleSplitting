@@ -17,13 +17,7 @@ This function accepts a merged data frame of ADAPS data for
 a site/storm event
 }
 \examples{
-\dontrun{
-siteNo <- "434425090462401"
-StartDt <- '2013-10-03'
-EndDt <- '2013-10-05'
-precipSite <- "434425090462401"
-adaps_data_all <- getADAPSData(siteNo,StartDt,EndDt,precipSite)
-hydrographInteractive(adaps_data_all)
-}
+rdbExample<-rdbExample
+hydrographInteractive(rdbExample)
 }
 

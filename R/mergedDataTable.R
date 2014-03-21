@@ -8,7 +8,7 @@
 #' @param adaps_data_all data frame of event data
 #' @export
 mergedDataTable <- function(siteNo,StartDt,EndDt,adaps_data_all) {  
-  tableOut <- adaps_data_all[,c("agency_cd","site_no","datetime","X01_00065","X02_00060","X06_99234")]
+  tableOut <- adaps_data_all[,c("agency_cd","site_no","datetime","p00065","p00060","p99234")]
   fileName <- paste(siteNo,"data.csv",sep="")
   sink(fileName)
   cat("Station:"," ",siteNo,"\t","Start date:"," ",strftime(StartDt),"\t","End date:"," ",strftime(EndDt),"\n\n")

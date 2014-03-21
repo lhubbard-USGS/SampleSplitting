@@ -25,10 +25,10 @@ site id, a StartDate, an EndDate and file names as needed
 }
 \examples{
 \dontrun{
-siteNo <- "434425090462401"
-StartDt <- '2013-10-03'
-EndDt <- '2013-10-05'
-getADAPSData(siteNo,StartDt,EndDt,precipSite)
+siteNo <- "424314090240601"
+StartDt <- '2008-05-30'
+EndDt <- '2008-06-15'
+getADAPSData(siteNo,StartDt,EndDt,siteNo,dataFile)
 }
 }
 

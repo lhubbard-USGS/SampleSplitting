@@ -9,12 +9,12 @@ StartDt <- '2008-05-30'
 EndDt <- '2008-06-15'
 # enter NWIS station id for precipitation gaging station, may or may not be identical to "siteNo"
 precipSite <- "434425090462401"
-# enter the name of the storm(s) (for plot title)
-StormName <- c("S2-066","S2-067","S2-068","S2-069","S2-070","S2-071","S2-072","S2-073","S2-074","S2-075")
 # enter path and name of data file if data is not web-available
 dataFile <- "M:/NonPoint Evaluation/GLRI Edge-of-field/Splitting Record Conversion to R/PLAT2TEST.RDB"
 
-# Retrieve data from NWISWeb (if available), or use file names to pull data in from files exported by ADAPS
+# Retrieve data from NWISWeb (if available)
+adaps_data_all <- getADAPSData(siteNo,StartDt,EndDt,precipSite)
+# or use file names to pull data in from files exported by ADAPS
 adaps_data_all <- getADAPSData(siteNo,StartDt,EndDt,precipSite,dataFile)
 
 # save merged data for station/storm event, saved as file, eg 434425090462401data.txt 
@@ -25,7 +25,7 @@ hydrographPlot <- hydrographInteractive(adaps_data_all)
 plot(hydrographPlot)
 
 # Generate pdf of hydrograph to save, saved as file, eg 434425090462401hydrograph.pdf 
-hydrographPDF(adaps_data_all,storm_name,siteNo)
+hydrographPDF(adaps_data_all,"S2",siteNo)
 
 # enter the maximum possible volume for one sample bottle
 maxBottleVol <- c(400,600,600,600,600,600,600,400,600,800)
@@ -45,6 +45,8 @@ StormEnd <- c(strptime("2008-05-30 08:49","%Y-%m-%d %H:%M"),strptime("2008-06-05
               strptime("2008-06-12 10:22","%Y-%m-%d %H:%M"),strptime("2008-06-13 01:36","%Y-%m-%d %H:%M"),
               strptime("2008-06-14 18:05","%Y-%m-%d %H:%M"),strptime("2008-06-15 09:22","%Y-%m-%d %H:%M"))
 #StormEnd <- c(strptime("2013-10-03 21:15","%Y-%m-%d %H:%M"),strptime("2013-10-05 11:30","%Y-%m-%d %H:%M"))
+# enter the name of the storm(s) (for plot title)
+StormName <- c("S2-066","S2-067","S2-068","S2-069","S2-070","S2-071","S2-072","S2-073","S2-074","S2-075")
 # enter number for 1st bottle of each storm, if a number other than 1 is desired
 subNum <- c(1,1,1,1,16,1,1,5,1,7)
 

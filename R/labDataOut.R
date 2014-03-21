@@ -15,21 +15,17 @@
 #' @import googleVis
 #' @export
 #' @examples
-#' \dontrun{
-#' siteNo <- "434425090462401"
-#' StartDt <- '2013-10-03'
-#' EndDt <- '2013-10-05'
-#' adaps_data_all <- getADAPSData(siteNo,StartDt,EndDt)
-#' maxBottleVol <- 900
-#' maxSampVol <- 3900
-#' StormStart <- c(strptime("2013-10-03 15:18","%Y-%m-%d %H:%M"),strptime("2013-10-05 2:30","%Y-%m-%d %H:%M"))
-#' StormEnd <- c(strptime("2013-10-03 21:15","%Y-%m-%d %H:%M"),strptime("2013-10-05 11:30","%Y-%m-%d %H:%M"))
-#' StormName <- c("JF6-38","JF6-39")
-#' labDataOut(adaps_data_all,StormStart,StormEnd,StormName,maxBottleVol,maxSampVol)
-#' }
+#' rdbExample<-rdbExample
+#' maxBottleVol <- c(400,600,600,600,600,600,600,400,600,800)
+#' maxSampVol <- c(3900,3900,3900,3900,3900,3900,3900,3900,3900,3900)
+#' StormStart <- c(strptime("2008-05-30 02:51","%Y-%m-%d %H:%M"),strptime("2008-06-05 04:39","%Y-%m-%d %H:%M"),strptime("2008-06-06 04:22","%Y-%m-%d %H:%M"),strptime("2008-06-07 22:52","%Y-%m-%d %H:%M"),strptime("2008-06-08 08:41","%Y-%m-%d %H:%M"),strptime("2008-06-08 19:03","%Y-%m-%d %H:%M"),strptime("2008-06-12 09:03","%Y-%m-%d %H:%M"),strptime("2008-06-12 21:40","%Y-%m-%d %H:%M"),strptime("2008-06-14 16:52","%Y-%m-%d %H:%M"),strptime("2008-06-15 04:07","%Y-%m-%d %H:%M"))
+#' StormEnd <- c(strptime("2008-05-30 08:49","%Y-%m-%d %H:%M"),strptime("2008-06-05 07:21","%Y-%m-%d %H:%M"),strptime("2008-06-06 05:28","%Y-%m-%d %H:%M"),strptime("2008-06-08 01:14","%Y-%m-%d %H:%M"),strptime("2008-06-08 11:39","%Y-%m-%d %H:%M"),strptime("2008-06-08 21:31","%Y-%m-%d %H:%M"),strptime("2008-06-12 10:22","%Y-%m-%d %H:%M"),strptime("2008-06-13 01:36","%Y-%m-%d %H:%M"),strptime("2008-06-14 18:05","%Y-%m-%d %H:%M"),strptime("2008-06-15 09:22","%Y-%m-%d %H:%M"))
+#' StormName <- c("S2-066","S2-067","S2-068","S2-069","S2-070","S2-071","S2-072","S2-073","S2-074","S2-075")
+#' subNum <- c(1,1,1,1,16,1,1,5,1,7)
+#' labDataOut(rdbExample,StormStart,StormEnd,StormName,maxBottleVol,maxSampVol)
 labDataOut <- function(adaps_data_all,StormStart,StormEnd,StormName,maxBottleVol,maxSampVol,removeDate="",subNum=-9) {
-adaps_data_samples <- adaps_data_all[which(adaps_data_all$X06_99234>0),c("datetime","X02_00060")]
-adaps_data_plot <- adaps_data_all[,c("datetime","X01_00065","X02_00060")]
+adaps_data_samples <- adaps_data_all[which(adaps_data_all$p99234>0),c("datetime","p00060")]
+adaps_data_plot <- adaps_data_all[,c("datetime","p00065","p00060")]
 
 tableOut <- list()
 numStorms <- length(StormStart)
@@ -42,14 +38,14 @@ for (j in 1:numStorms) {
   startRow <- as.character(as.numeric(row.names(adaps_data_plot[which(StartDt==adaps_data_plot$datetime),]))-1)
   endRow <- as.character(as.numeric(row.names(adaps_data_plot[which(EndDt==adaps_data_plot$datetime),]))+1)
   adaps_data_storm <- adaps_data_plot[startRow:endRow,]
-  adaps_data_storm <- adaps_data_storm[which(!is.na(adaps_data_storm$X02_00060)),]
+  adaps_data_storm <- adaps_data_storm[which(!is.na(adaps_data_storm$p00060)),]
   data_rows <- nrow(adaps_data_storm)
   adaps_data_storm$volume <- 9999
   for (i in 1:data_rows) {
     if (i>1) {
       if (i<data_rows) {
         
-        adaps_data_storm$volume[i] <- (.5*(as.numeric(difftime(adaps_data_storm$datetime[i],adaps_data_storm$datetime[i-1],units="secs")))*(.75*adaps_data_storm$X02_00060[i]+.25*adaps_data_storm$X02_00060[i-1]))+(.5*(as.numeric(difftime(adaps_data_storm$datetime[i+1],adaps_data_storm$datetime[i],units="secs")))*(.75*adaps_data_storm$X02_00060[i]+.25*adaps_data_storm$X02_00060[i+1]))
+        adaps_data_storm$volume[i] <- (.5*(as.numeric(difftime(adaps_data_storm$datetime[i],adaps_data_storm$datetime[i-1],units="secs")))*(.75*adaps_data_storm$p00060[i]+.25*adaps_data_storm$p00060[i-1]))+(.5*(as.numeric(difftime(adaps_data_storm$datetime[i+1],adaps_data_storm$datetime[i],units="secs")))*(.75*adaps_data_storm$p00060[i]+.25*adaps_data_storm$p00060[i+1]))
       } else {
         adaps_data_storm$volume[i] <- NA
       }

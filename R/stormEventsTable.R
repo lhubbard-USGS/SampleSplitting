@@ -15,18 +15,25 @@ stormEventsTable <- function(StormName,StormStart,StormEnd,tableOut,maxBottleVol
   volSum <- 0
   sink(fileName)
   for (i in 1:length(StormName)) {
+    if (!is.na(tableOut[[i]][1,2])) {
     cat(StormName[i],"\t",strftime(StormStart[i]),"\t",strftime(StormEnd[i]),"\n\n")
     print(tableOut[[i]],row.names=FALSE)
     cat("\n\n")
     cat("Lab Sample Volume","\t",sum(tableOut[[i]]$mL),"mL\t",sum(tableOut[[i]]$perc),"percent\n\n")
     cat("Max Bottle Volume","\t",maxBottleVol[i],"mL\n\n")
-    cat("Max Optimized Bottle Volue","\t",max(tableOut[[i]]$mL),"mL\n\n")
+    cat("Max Optimized Bottle Volume","\t",max(tableOut[[i]]$mL),"mL\n\n")
     cat("Max Sample Runoff Volume","\t",max(tableOut[[i]]$volume),"cubic feet\n\n")
     cat("Total Sampled Storm Volume","\t",sum(tableOut[[i]]$volume),"cubic feet\n\n")
     cat("Bottles ",tableOut[[i]]$subNum[1]," through ",tableOut[[i]]$subNum[length(tableOut[[i]]$subNum)]," picked up ",bottlePickup,"\n\n")
-    if (length(removeComment[i])>0) {cat(removeComment[i],"\n\n")}
+    if (!is.na(removeComment[i])) {cat(removeComment[i],"\n\n")}
     volSum <- sum(tableOut[[i]]$volume) + volSum
     cat("========================================================================================================","\n\n")
+    } else {
+      cat(StormName[i],"\t",strftime(StormStart[i]),"\t",strftime(StormEnd[i]),"\n\n")
+      cat("Total Sampled Storm Volume","\t",sum(tableOut[[i]]$volume),"cubic feet\n\n")
+      volSum <- sum(tableOut[[i]]$volume) + volSum
+      cat("========================================================================================================","\n\n")
+    }
   }
   cat("Total Storm Volume from subs",volSum,"\n\n")
   cat("Total Storm Volume", sum(tableOut[[length(tableOut)]]$volume),"\n\n")

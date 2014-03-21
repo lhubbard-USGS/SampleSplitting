@@ -2,16 +2,16 @@
 \alias{hydrographPDF}
 \title{Function to generate and save pdf version of the hydrograph plot}
 \usage{
-hydrographPDF(adaps_data_all, storm_name, siteNo)
+hydrographPDF(adaps_data_all, siteNo, dateInt)
 }
 \arguments{
   \item{adaps_data_all}{data frame containing merged ADAPS
   data for the requested storm event}
 
-  \item{storm_name}{string containing the storm name title
-  for the plot}
-
   \item{siteNo}{string containing USGS gage number}
+
+  \item{dateInt}{number containing number of hours
+  difference between x-axis tick marks}
 }
 \description{
 This function accepts a merged data frame of ADAPS data for

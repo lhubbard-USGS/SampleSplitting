@@ -12,6 +12,7 @@ labVolumesTable <- function(StormName,StormStart,StormEnd,tableOut,bottlePickup)
   fileName <- paste(StormName[1],"labVolumes",".txt",sep="")
   sink(fileName)
   for (i in 1:length(StormName)) {
+    if (!is.na(tableOut[[i]][1,2])) {
     cat("==================================================================================","\n")
     cat("\t",StormName[i],"\t\t",strftime(StormStart[i]),"\t",strftime(StormEnd[i]),"\n")
     cat("==================================================================================","\n")
@@ -21,7 +22,7 @@ labVolumesTable <- function(StormName,StormStart,StormEnd,tableOut,bottlePickup)
     }
     cat("==================================================================================","\n")
     cat("\t","Bottles ",tableOut[[i]]$subNum[1]," through ",tableOut[[i]]$subNum[length(tableOut[[i]]$subNum)]," picked up ",bottlePickup,"\n")
-    cat("==================================================================================","\n")
+    cat("==================================================================================","\n")}
   }
   sink()
 }

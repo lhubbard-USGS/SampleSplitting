@@ -1,0 +1,416 @@
+%\VignetteIndexEntry{Introduction to the SampleSplitting package}
+%\VignetteEngine{knitr::knitr}
+%\VignetteDepends{}
+%\VignetteSuggests{knitr,xtable}
+%\VignetteImports{dataRetrieval,googleVis}
+%\VignettePackage{SampleSplitting}
+
+\documentclass[a4paper,11pt]{article}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+
+\usepackage{amsmath}
+\usepackage{times}
+\usepackage{hyperref}
+\usepackage[numbers, round]{natbib}
+\usepackage[american]{babel}
+\usepackage{authblk}
+\usepackage{subfig}
+\usepackage{placeins}
+\usepackage{footnote}
+\usepackage{tabularx}
+\renewcommand\Affilfont{\itshape\small}
+
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\textfraction}{0.1}
+\usepackage{graphicx}
+
+
+\textwidth=6.2in
+\textheight=8.5in
+\parskip=.3cm
+\oddsidemargin=.1in
+\evensidemargin=.1in
+\headheight=-.3in
+
+%------------------------------------------------------------
+% newcommand
+%------------------------------------------------------------
+\newcommand{\scscst}{\scriptscriptstyle}
+\newcommand{\scst}{\scriptstyle}
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Rclass}[1]{\textit{#1}}
+\newcommand{\Rpackage}[1]{\textit{#1}}
+\newcommand{\Rexpression}[1]{\texttt{#1}}
+\newcommand{\Rmethod}[1]{{\texttt{#1}}}
+\newcommand{\Rfunarg}[1]{{\texttt{#1}}}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+
+\begin{document}
+
+
+
+
+
+
+%------------------------------------------------------------
+\title{The SampleSplitting R package}
+%------------------------------------------------------------
+\author[1]{Jessica Thompson}
+\author[1]{Laura Hubbard}
+\author[1]{Matt Komiskey}
+\author[1]{Todd Stuntebeck}
+\affil[1]{United States Geological Survey}
+
+
+
+
+
+
+\maketitle
+\tableofcontents
+
+%------------------------------------------------------------
+\section{Introduction to SampleSplitting}
+%------------------------------------------------------------ 
+
+SampleSplitting: An R package for the automation of splitting time-paced runoff event samples, including creation of summary table for laboratory use.
+
+The best way to learn about the time-paced runoff event sampling technique is to read the USGS Open-file Report that summarizes data collection, processing and analysis for the Discovery Farms and Pioneer Farm sites in Wisconsin. The url is \cite{Stuntebeck}:
+\url{http://pubs.usgs.gov/of/2008/1015/pdf/ofr2008-1015.pdf}
+
+This vignette assumes that the user understands the basics of runoff event sampling and the USGS ADAPs system. The vignette will walk through an example workflow using provided data for a real storm event. An example workflow script is also provided online at \url {https://github.com/USGS-R/SampleSplitting/blob/master/sampleSplitWorkflow.R}
+
+This package also requires the use of the packages googleVis and dataRetrieval. The googleVis package provides an interface between the Google Charts API and R, for the creation of interactive charts. The dataRetrieval package enables easy retrieval of USGS data from available web services or user provided data files.
+
+%------------------------------------------------------------
+\section{General Workflow}
+%------------------------------------------------------------ 
+
+This example vignette first loads the relevant packages (assuming they are already installed) and the included sample data. In your use, you would need to load the packages, but not the given example data. 
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{library}\hlstd{(SampleSplitting)}
+\hlkwd{library}\hlstd{(dataRetrieval)}
+\hlkwd{library}\hlstd{(googleVis)}
+
+\hlcom{############################################}
+\hlcom{# Load sample data included with package:}
+\hlstd{ExampleData} \hlkwb{<-} \hlstd{rdbExample}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+Enter information about the USGS station, date range and optional separate USGS station for precipitation data.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{############################################}
+\hlcom{# Enter information about the desired data set}
+\hlcom{# enter NWIS station id for gaging station}
+\hlstd{siteNo} \hlkwb{<-} \hlstr{"424314090240601"}
+\hlcom{# enter date to begin pulling data (rounded to the day)}
+\hlstd{StartDt} \hlkwb{<-} \hlstr{'2008-05-30'}
+\hlcom{# enter date to stop pulling data (rounded to the day)}
+\hlstd{EndDt} \hlkwb{<-} \hlstr{'2008-06-15'}
+\hlcom{# enter NWIS station id for precipitation gaging station, may or }
+\hlcom{# may not be identical to "siteNo"}
+\hlstd{precipSite} \hlkwb{<-} \hlstr{"434425090462401"}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+Normally, the user will now run the getADAPSData function with or without a dataFile variable, depending on if a data file exported from ADAPs is being used. For this example, we will simply rename the provided data.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{###############################################}
+\hlcom{# rename example data for following operations}
+\hlstd{adaps_data_all} \hlkwb{<-} \hlstd{ExampleData}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+The retrieved data is now saved as a comma-separated text file, in case you need to refer to it later. The file will be saved to your present working directory. If you are unsure of that location, you can run: "getwd()" at the R prompt to discover this information.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{###############################################}
+\hlcom{# save merged data for station/storm event, saved as file, }
+\hlcom{# eg 434425090462401data.csv }
+\hlkwd{mergedDataTable}\hlstd{(siteNo,StartDt,EndDt,adaps_data_all)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+Now the hydrologist may generate hydrographs to assist in choosing storm event start and end datetimes. There are two hydrographs available, one which generates an interactive Google charts visualization, which will pop up in a browser, and one that saves as a pdf to your working directory.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Generate interactive googleVis plot}
+\hlstd{hydrographPlot} \hlkwb{<-} \hlkwd{hydrographInteractive}\hlstd{(adaps_data_all)}
+\hlkwd{plot}\hlstd{(hydrographPlot)}
+
+\hlcom{# Generate pdf of hydrograph to save, saved as file, }
+\hlcom{# eg 434425090462401hydrograph.pdf }
+\hlcom{# adjust dateInt as desired to vary length of time (in hours) between }
+\hlcom{# x-axis tick marks}
+\hlkwd{hydrographPDF}\hlstd{(adaps_data_all,siteNo,}\hlkwc{dateInt}\hlstd{=}\hlnum{8}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+Now that storm start and end times have been determined, it is time to enter information for each event. You must enter a StormStart, StormEnd and StormName for each event. For sampled events, you must also enter maxBottleVol, maxSampleVol and subNum. These values must be in order (eg, all lists must be in the same order as the StormNames). If you have unsampled storms, just skip the maxBottleVol, maxSampVol and subNum for those. So, if I have 3 storm events - "S1-01","S1-02","S1-03" - and S1-02 wasn't sampled, my lists might be:
+\begin{verbatim}
+StormName     c("S1-01","S1-02","S1-03")
+StormStart    c("2012-04-01 14:00","2012-04-02 20:30","2012-04-05 10:15")
+StormStart    c("2012-04-01 22:30","2012-04-03 02:15","2012-04-05 13:45")
+maxBottleVol  c(400,400)
+maxSampVol    c(3900,3900)
+subNum        c(1,5)
+\end{verbatim}
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{#############################################################}
+\hlcom{# after using the hydrographs to determine storm start and end time(s), }
+\hlcom{# enter information for storm events.}
+\hlcom{# IF you have un-sampled storms, you may enter their StormStart and  }
+\hlcom{# StormEnd values, as well as StormNames in }
+\hlcom{# the appropriate list. Leave them out of the maxBottleVol, maxSampVol  }
+\hlcom{# and subNum lists}
+\hlcom{# enter the name of the storm event(s)}
+\hlstd{StormName} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlstr{"S2-066"}\hlstd{,}\hlstr{"S2-066A"}\hlstd{,}\hlstr{"S2-067"}\hlstd{,}\hlstr{"S2-068"}\hlstd{,}\hlstr{"S2-069"}\hlstd{,}
+               \hlstr{"S2-070"}\hlstd{,}\hlstr{"S2-071"}\hlstd{,}\hlstr{"S2-072"}\hlstd{,}\hlstr{"S2-073"}\hlstd{,}\hlstr{"S2-074"}\hlstd{,}
+               \hlstr{"S2-075"}\hlstd{)}
+\hlcom{# enter Storm Start date(s)}
+\hlcom{# MUST be in the format YYYY-MM-DD HH:24}
+\hlstd{StormStart} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlstr{"2008-05-30 02:51"}\hlstd{,}\hlstr{"2008-06-01 02:30"}\hlstd{,}
+                \hlstr{"2008-06-05 04:39"}\hlstd{,}\hlstr{"2008-06-06 04:22"}\hlstd{,}
+                \hlstr{"2008-06-07 22:52"}\hlstd{,}\hlstr{"2008-06-08 08:41"}\hlstd{,}
+                \hlstr{"2008-06-08 19:03"}\hlstd{,}\hlstr{"2008-06-12 09:03"}\hlstd{,}
+                \hlstr{"2008-06-12 21:40"}\hlstd{,}\hlstr{"2008-06-14 16:52"}\hlstd{,}
+                \hlstr{"2008-06-15 04:07"}\hlstd{)}
+\hlcom{# enter Storm End date(s) }
+\hlcom{# MUST be in the format YYYY-MM-DD HH:24}
+\hlstd{StormEnd} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlstr{"2008-05-30 08:49"}\hlstd{,}\hlstr{"2008-06-01 22:45"}\hlstd{,}
+              \hlstr{"2008-06-05 07:21"}\hlstd{,}\hlstr{"2008-06-06 05:28"}\hlstd{,}
+              \hlstr{"2008-06-08 01:14"}\hlstd{,}\hlstr{"2008-06-08 11:39"}\hlstd{,}
+              \hlstr{"2008-06-08 21:31"}\hlstd{,}\hlstr{"2008-06-12 10:22"}\hlstd{,}
+              \hlstr{"2008-06-13 01:36"}\hlstd{,}\hlstr{"2008-06-14 18:05"}\hlstd{,}
+              \hlstr{"2008-06-15 09:22"}\hlstd{)}
+\hlcom{# enter the maximum possible volume for one sample bottle}
+\hlstd{maxBottleVol} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{400}\hlstd{,}\hlnum{600}\hlstd{,}\hlnum{600}\hlstd{,}\hlnum{600}\hlstd{,}\hlnum{600}\hlstd{,}\hlnum{600}\hlstd{,}\hlnum{600}\hlstd{,}\hlnum{400}\hlstd{,}\hlnum{600}\hlstd{,}\hlnum{800}\hlstd{)}
+\hlcom{# enter the maximum possible volume for one full storm sample}
+\hlstd{maxSampVol} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{3900}\hlstd{,}\hlnum{3900}\hlstd{,}\hlnum{3900}\hlstd{,}\hlnum{3900}\hlstd{,}\hlnum{3900}\hlstd{,}\hlnum{3900}\hlstd{,}\hlnum{3900}\hlstd{,}\hlnum{3900}\hlstd{,}\hlnum{3900}\hlstd{,}\hlnum{3900}\hlstd{)}
+\hlcom{# enter number for 1st bottle of each storm, if a number other }
+\hlcom{# than 1 is desired}
+\hlstd{subNum} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{16}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{5}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{7}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+Once that information has been entered, it is time to run the calculation for sample splitting volumes. After the calculation has been done, it may be helpful to output the initial numbers for review, as well as save the intermediate volume calculations (for later reference).
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# generate bottle volume table(s) for lab for each storm}
+\hlstd{tableOut} \hlkwb{<-} \hlkwd{labDataOut}\hlstd{(adaps_data_all,StormStart,StormEnd,StormName,}
+                       \hlstd{maxBottleVol,maxSampVol,}\hlkwc{subNum}\hlstd{=subNum)}
+\hlcom{# look at table(s) generated for lab sample instructions for storm }
+\hlcom{# event(s) and determine if changes are needed}
+\hlkwa{for} \hlstd{(i} \hlkwa{in} \hlnum{1}\hlopt{:}\hlkwd{length}\hlstd{(StormStart))\{}
+  \hlkwd{print}\hlstd{(tableOut[[i]])}
+\hlstd{\}}
+
+\hlcom{#Output csv file of all intermediate volumes used for calculations}
+\hlkwd{intermediateVolTable}\hlstd{(siteNo,StormStart,StormEnd,tableOut)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+After looking at the initial volumes, if there is a sample that needs to be removed, you can optionally run the following section to remove the desired sample and also re-calculate volumes and save the updated information.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# OPTIONAL if sample(s) need to be removed, enter their datetime  }
+\hlcom{# and a comment and re-create tableOut}
+\hlcom{# MUST be in the format YYYY-MM-DD HH:24}
+\hlstd{removeDate} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlstr{"2008-05-30 07:44"}\hlstd{)}
+\hlstd{removeComment} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlstr{""}\hlstd{)}
+\hlstd{tableOut} \hlkwb{<-} \hlkwd{labDataOut}\hlstd{(adaps_data_all,StormStart,StormEnd,StormName,}
+                       \hlstd{maxBottleVol,maxSampVol,}
+                       \hlkwc{removeDate}\hlstd{=removeDate,}\hlkwc{subNum}\hlstd{=subNum)}
+\hlkwa{for} \hlstd{(i} \hlkwa{in} \hlnum{1}\hlopt{:}\hlkwd{length}\hlstd{(StormStart))\{}
+  \hlkwd{print}\hlstd{(tableOut[[i]])}
+\hlstd{\}}
+\hlkwd{intermediateVolTable}\hlstd{(siteNo,StormStart,StormEnd,tableOut)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+When you are satisfied with the sample splitting volume calculations, it is time to enter the date when sample bottles were retrieved and generate two summary files. The first summary file is named, for example, S2-066sampVol.txt. It contains the volume calculations for the sample bottles for all storm events as well as extra information for the hydrologist, such as the total volume fo the lab sample and the total sampled storm volume. The other file, S2-066labVolumes.txt, contains a clean table of bottle volumes for each storm event to be sent to the lab.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{#Once you are satisfied with the table output}
+\hlcom{#enter date(s) when samples were picked up }
+\hlstd{bottlePickup} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlstr{"2012-06-21"}\hlstd{)}
+
+\hlcom{# generate text file with storm event sample bottle }
+\hlcom{# volume table(s)}
+\hlkwd{stormEventsTable}\hlstd{(StormName,StormStart,StormEnd,tableOut,}
+                 \hlstd{maxBottleVol,bottlePickup)}
+
+\hlcom{# generate simple table for lab}
+\hlkwd{labVolumesTable}\hlstd{(StormName,StormStart,StormEnd,tableOut,}
+                \hlstd{bottlePickup)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+%------------------------------------------------------------ 
+\section{Getting Started in R}
+%------------------------------------------------------------ 
+This section describes the options for downloading and installing the sampleSplitting package.
+
+%------------------------------------------------------------
+\subsection{New to R?}
+%------------------------------------------------------------ 
+If you are new to R, you will need to first install the latest version of R, which can be found here: \url{http://www.r-project.org/}.
+
+There are many options for running and editing R code, one nice environment to learn R is RStudio. RStudio can be downloaded here: \url{http://rstudio.org/}. Once R and RStudio are installed, the dataRetrieval package needs to be installed as described in the next section.
+
+At any time, you can get information about any function in R by typing a question mark before the functions name.  This will open a file (in RStudio, in the Help window) that describes the function, the required arguments, and provides working examples.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{library}\hlstd{(SampleSplitting)}
+\hlopt{?}\hlstd{getADAPSData}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+To see the raw code for a particular code, type the name of the function:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{getADAPSData}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+%------------------------------------------------------------
+\subsection{R User: Installing sampleSplitting}
+%------------------------------------------------------------ 
+Before installing sampleSplitting, the supporting packages must be first be installed:
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{install.packages}\hlstd{(}\hlkwd{c}\hlstd{(}\hlstr{"googleVis"}\hlstd{),} \hlkwc{dependencies}\hlstd{=}\hlnum{TRUE}\hlstd{)}
+\hlkwd{install.packages}\hlstd{(}\hlkwd{c}\hlstd{(}\hlstr{"dataRetrieval"}\hlstd{),} \hlkwc{repos}\hlstd{=}\hlstr{"http://usgs-r.github.com"}\hlstd{)}
+\hlkwd{install.packages}\hlstd{(}\hlkwd{c}\hlstd{(}\hlstr{"SampleSplitting"}\hlstd{),} \hlkwc{repos}\hlstd{=}\hlstr{"http://usgs-r.github.com"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+It is a good idea to re-start R after installing the package, especially if installing an updated version. Some users have found it necessary to delete the previous version's package folder before installing newer version of dataRetrieval. If you are experiencing issues after updating a package, trying deleting the package folder - the default location for Windows is something like this: C:/Users/userA/Documents/R/win-library/2.15/dataRetrieval, and the default for a Mac: /Users/userA/Library/R/2.15/library/dataRetrieval. Then, re-install the package using the directions above. Moving to CRAN should solve this problem.
+
+After installing the package, you need to open the library each time you re-start R.  This is done with the simple command:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{library}\hlstd{(SampleSplitting)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+\clearpage
+
+%------------------------------------------------------------------------------------
+% BIBLIO
+%------------------------------------------------------------------------------------
+\begin{thebibliography}{10}
+
+\bibitem{Stuntebeck}
+Stuntebeck, T.D., Komiskey, M.J., Owens, D.W., and Hall, D.W., 2008, Methods of data collection, sample processing, and data analysis for edge-of-field, streamgaging, subsurface-tile, and meteorological stations at Discovery Farms and Pioneer Farm in Wisconsin, 2001-7: U.S. Geological Survey Open-File Report 2008-1015, 51 p.
+\url{http://pubs.usgs.gov/of/2008/1015/pdf/ofr2008-1015.pdf}
+
+\end{thebibliography}
+
+\end{document}
+
+\end{document}

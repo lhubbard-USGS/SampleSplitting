@@ -32,10 +32,8 @@ hydrographPDF(adaps_data_all,siteNo,dateInt=8)
 
 # IF you have un-sampled storms, you may enter their StormStart and StormEnd values, as well as StormNames in 
 # the appropriate list. Leave them out of the maxBottleVol, maxSampVol and subNum lists
-# enter the maximum possible volume for one sample bottle
-maxBottleVol <- c(400,600,600,600,600,600,600,400,600,800)
-# enter the maximum possible volume for one full storm sample
-maxSampVol <- c(3900,3900,3900,3900,3900,3900,3900,3900,3900,3900)
+# enter the name of the storm(s) (for plot title)
+StormName <- c("S2-066","S2-066A","S2-067","S2-068","S2-069","S2-070","S2-071","S2-072","S2-073","S2-074","S2-075")
 # enter Storm Start date(s)
 # MUST be in the format YYYY-MM-DD HH:24
 StormStart <- c("2008-05-30 02:51","2008-06-01 02:30","2008-06-05 04:39","2008-06-06 04:22","2008-06-07 22:52",
@@ -46,9 +44,10 @@ StormStart <- c("2008-05-30 02:51","2008-06-01 02:30","2008-06-05 04:39","2008-0
 StormEnd <- c("2008-05-30 08:49","2008-06-01 22:45","2008-06-05 07:21","2008-06-06 05:28","2008-06-08 01:14",
               "2008-06-08 11:39","2008-06-08 21:31","2008-06-12 10:22","2008-06-13 01:36","2008-06-14 18:05",
               "2008-06-15 09:22")
-#StormEnd <- c(strptime("2013-10-03 21:15","%Y-%m-%d %H:%M"),strptime("2013-10-05 11:30","%Y-%m-%d %H:%M"))
-# enter the name of the storm(s) (for plot title)
-StormName <- c("S2-066","S2-066A","S2-067","S2-068","S2-069","S2-070","S2-071","S2-072","S2-073","S2-074","S2-075")
+# enter the maximum possible volume for one sample bottle
+maxBottleVol <- c(400,600,600,600,600,600,600,400,600,800)
+# enter the maximum possible volume for one full storm sample
+maxSampVol <- c(3900,3900,3900,3900,3900,3900,3900,3900,3900,3900)
 # enter number for 1st bottle of each storm, if a number other than 1 is desired
 subNum <- c(1,1,1,1,16,1,1,5,1,7)
 
@@ -58,13 +57,8 @@ tableOut <- labDataOut(adaps_data_all,StormStart,StormEnd,StormName,maxBottleVol
 for (i in 1:length(StormStart)){
   print(tableOut[[i]])
 }
-
 #Output csv file of all intermediate volumes used for calculations
 intermediateVolTable(siteNo,StormStart,StormEnd,tableOut)
-
-#Once you are satisfied with the table output
-#enter date(s) when samples were picked up 
-bottlePickup <- c("2012-06-21")
 
 # OPTIONAL if sample(s) need to be removed, enter their datetime and a comment and re-create tableOut
 # MUST be in the format YYYY-MM-DD HH:24
@@ -75,6 +69,10 @@ for (i in 1:length(StormStart)){
   print(tableOut[[i]])
 }
 intermediateVolTable(siteNo,StormStart,StormEnd,tableOut)
+
+#Once you are satisfied with the table output
+#enter date(s) when samples were picked up 
+bottlePickup <- c("2012-06-21")
 
 # generate text file with storm event sample bottle volume table(s)
 stormEventsTable(StormName,StormStart,StormEnd,tableOut,maxBottleVol,bottlePickup)

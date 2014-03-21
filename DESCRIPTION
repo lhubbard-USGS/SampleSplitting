@@ -1,4 +1,4 @@
-Package: sampleSplitting
+Package: SampleSplitting
 Type: Package
 Title: Assists users in loading site data and preparing splitting volumes for
     the lab
@@ -11,6 +11,8 @@ Depends:
 Imports:
     dataRetrieval,
     googleVis
+Suggests:
+    knitr
 Description: Uses USGS NWISWeb web services to fetch data for the user's
     desired USGS NWIS stations; calculates sample bottle volumes for provided
     storm events; and returns this data in a text output file.

@@ -19,21 +19,27 @@
 #' }
 getADAPSData <- function(siteNo,StartDt,EndDt,precipSite,dataFile="") {
 if (nchar(dataFile)<=3) {
-POR <- getDataAvailability(siteNo,interactive=FALSE)
+POR <- paramAvailability(siteNo)
 POR <- POR[which(POR$service=="uv"&POR$parameter_cd %in% c("00060","00065","99234")),]
-PORprecip <- getDataAvailability(precipSite,interactive=FALSE)
+PORprecip <- paramAvailability(precipSite)
 PORprecip <- PORprecip[which(PORprecip$service=="uv"&PORprecip$parameter_cd=="00045"),]
-if (length(unique(POR$parameter_cd))>=3) {
+if ((length(unique(POR$parameter_cd)))+(length(unique(PORprecip$parameter_cd)))>=4) {
   if (max(POR$startDate)<=StartDt&min(POR$endDate)>=EndDt) {
     adaps_stage_in <- retrieveUnitNWISData(siteNo,'00065',StartDt,EndDt,format="tsv",interactive=FALSE)    
     adaps_discharge_in <- retrieveUnitNWISData(siteNo,'00060',StartDt,EndDt,format="tsv",interactive=FALSE)
     if (siteNo!=precipSite) {
-      adaps_precip_in <- retrieveUnitNWISData(precipSite,'00045',StartDt,EndDt,format="tsv",interactive=FALSE)
+      precip_url <- constructNWISURL(precipSite,'00045',StartDt,EndDt,"uv",format="tsv",interactive=FALSE)
+      precip_url <- paste(precip_url,"&access=",PORprecip$status,sep="")
+      adaps_precip_in <- getRDB1Data(precip_url,asDateTime=TRUE)
+      colnames(adaps_precip_in) <- c("agency_cd","site_no","datetime","tz_cd","p00045","p00045_cd")
     } else {
-      adaps_precip_in <- retrieveUnitNWISData(siteNo,'00045',StartDt,EndDt,format="tsv",interactive=FALSE)
+      precip_url <- constructNWISURL(precipSite,'00045',StartDt,EndDt,"uv",format="tsv",interactive=FALSE)
+      precip_url <- paste(precip_url,"&access=",PORprecip$status,sep="")
+      adaps_precip_in <- getRDB1Data(precip_url,asDateTime=TRUE)
+      colnames(adaps_precip_in) <- c("agency_cd","site_no","datetime","tz_cd","p00045","p00045_cd")
     }
     scode_url <- constructNWISURL(siteNo,'99234',StartDt,EndDt,"uv",format="tsv",interactive=FALSE)
-    scode_url <- paste(scode_url,"&access=3",sep="")
+    scode_url <- paste(scode_url,"&access=",POR$status[which(POR$parameter_cd=="99234")],sep="")
     adaps_scode_in <- getRDB1Data(scode_url,asDateTime=TRUE)
     colnames(adaps_scode_in) <- c("agency_cd","site_no","datetime","tz_cd","p99234","p99234_cd")
     adaps_scode_in <- subset(adaps_scode_in,adaps_scode_in$p99234>900)

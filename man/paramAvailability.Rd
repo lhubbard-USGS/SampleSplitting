@@ -1,0 +1,25 @@
+\name{paramAvailability}
+\alias{paramAvailability}
+\title{Function to return data availability, internal or public, from NWISWeb}
+\usage{
+paramAvailability(siteNo)
+}
+\arguments{
+  \item{siteNo}{NWIS gaging station id}
+}
+\value{
+SiteFile data frame of data available for a given site from
+NWISWeb
+}
+\description{
+This function accepts an NWIS gage site id
+}
+\examples{
+\dontrun{
+siteNo <- "441520088045002"
+StartDt <- '2014-03-10'
+EndDt <- '2014-03-17'
+paramAvailability(siteNo)
+}
+}
+

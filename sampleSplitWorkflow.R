@@ -1,4 +1,4 @@
-library(sampleSplitting)
+library(SampleSplitting)
 library(dataRetrieval)
 library(googleVis)
 # enter NWIS station id for gaging station

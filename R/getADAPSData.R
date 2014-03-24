@@ -23,7 +23,7 @@ POR <- getDataAvailability(siteNo,interactive=FALSE)
 POR <- POR[which(POR$service=="uv"&POR$parameter_cd %in% c("00060","00065","99234")),]
 PORprecip <- getDataAvailability(precipSite,interactive=FALSE)
 PORprecip <- PORprecip[which(PORprecip$service=="uv"&PORprecip$parameter_cd=="00045"),]
-if ((length(unique(POR$parameter_cd))+length(unique(POR$parameter_cd)))>=3) {
+if (length(unique(POR$parameter_cd))>=3) {
   if (max(POR$startDate)<=StartDt&min(POR$endDate)>=EndDt) {
     adaps_stage_in <- retrieveUnitNWISData(siteNo,'00065',StartDt,EndDt,format="tsv",interactive=FALSE)    
     adaps_discharge_in <- retrieveUnitNWISData(siteNo,'00060',StartDt,EndDt,format="tsv",interactive=FALSE)
@@ -41,7 +41,7 @@ if ((length(unique(POR$parameter_cd))+length(unique(POR$parameter_cd)))>=3) {
     adaps_data<-merge(adaps_precip_in[c(3,5)],adaps_data,by="datetime",all=T)
     adaps_data_all <- merge(adaps_data,adaps_scode_in[c(3,5)],by="datetime",all=T)
     colnames(adaps_data_all) <- c("datetime","p00045","agency_cd","site_no","p00065","p00060","p99234")
-  } else {cat(paste("ADAPS data not available on via NWISWeb for selected site, date range and parameter codes","\n",sep=" "))}
+  } 
 }} else {
   adaps_data_in <- read.delim(dataFile,header=TRUE,quote="\"",dec=".",sep="\t",colClasses=c("character"),strip.white=TRUE,fill=TRUE,comment.char="#")
   adaps_data_in <- adaps_data_in[-1, ]
@@ -67,8 +67,12 @@ if ((length(unique(POR$parameter_cd))+length(unique(POR$parameter_cd)))>=3) {
   adaps_data_all <- data.frame(adaps_data,rep("USGS",nrow(adaps_data)),rep(siteNo,nrow(adaps_data)),stringsAsFactors=FALSE)
   colnames(adaps_data_all) <- c("datetime","p99234","p00045","p00065","p00060","agency_cd","site_no")
 }
+if (length(unique(POR$parameter_cd))>=3) {
 for (i in 1:nrow(adaps_data_all)) {
   adaps_data_all$cum_00045[i] <- sum(adaps_data_all$p00045[1:i],na.rm=TRUE)
 }
 return(adaps_data_all)
+} else {cat(paste("ADAPS data not available on via NWISWeb for selected site, date range and parameter codes","\n",sep=" "))
+        cat(paste(POR$parameter_cd,POR$startDate,POR$endDate,POR$count,POR$srsname,"\n",sep=" "))
+        cat(paste(PORprecip$parameter_cd,PORprecip$startDate,PORprecip$endDate,PORprecip$count,PORprecip$srsname,"\n",sep=" "))}
 }

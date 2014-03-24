@@ -24,9 +24,15 @@ POR <- POR[which(POR$service=="uv"&POR$parameter_cd %in% c("00060","00065","9923
 PORprecip <- paramAvailability(precipSite)
 PORprecip <- PORprecip[which(PORprecip$service=="uv"&PORprecip$parameter_cd=="00045"),]
 if ((length(unique(POR$parameter_cd)))+(length(unique(PORprecip$parameter_cd)))>=4) {
-  if (max(POR$startDate)<=StartDt&min(POR$endDate)>=EndDt) {
-    adaps_stage_in <- retrieveUnitNWISData(siteNo,'00065',StartDt,EndDt,format="tsv",interactive=FALSE)    
-    adaps_discharge_in <- retrieveUnitNWISData(siteNo,'00060',StartDt,EndDt,format="tsv",interactive=FALSE)
+  if (max(POR$startDate[which(POR$service=="uv"&POR$parameter_cd %in% c("00060","00065"))])<=StartDt&min(POR$endDate[which(POR$service=="uv"&POR$parameter_cd %in% c("00060","00065"))])>=EndDt) {
+    stage_url <- constructNWISURL(siteNo,'00065',StartDt,EndDt,"uv",format="tsv",interactive=FALSE)
+    stage_url <- paste(stage_url,"&access=",POR$status[which(POR$parameter_cd=="00065")],sep="")
+    adaps_stage_in <- getRDB1Data(stage_url,asDateTime=TRUE)
+    colnames(adaps_stage_in) <- c("agency_cd","site_no","datetime","tz_cd","p00065","p00065_cd")
+    disch_url <- constructNWISURL(siteNo,'00060',StartDt,EndDt,"uv",format="tsv",interactive=FALSE)
+    disch_url <- paste(disch_url,"&access=",POR$status[which(POR$parameter_cd=="00060")],sep="")
+    adaps_disch_in <- getRDB1Data(disch_url,asDateTime=TRUE)
+    colnames(adaps_disch_in) <- c("agency_cd","site_no","datetime","tz_cd","p00060","p00060_cd")
     if (siteNo!=precipSite) {
       precip_url <- constructNWISURL(precipSite,'00045',StartDt,EndDt,"uv",format="tsv",interactive=FALSE)
       precip_url <- paste(precip_url,"&access=",PORprecip$status,sep="")
@@ -43,12 +49,11 @@ if ((length(unique(POR$parameter_cd)))+(length(unique(PORprecip$parameter_cd)))>
     adaps_scode_in <- getRDB1Data(scode_url,asDateTime=TRUE)
     colnames(adaps_scode_in) <- c("agency_cd","site_no","datetime","tz_cd","p99234","p99234_cd")
     adaps_scode_in <- subset(adaps_scode_in,adaps_scode_in$p99234>900)
-    adaps_data<-merge(adaps_stage_in[c(1,2,3,5)],adaps_discharge_in[c(3,5)],by="datetime",all=T)
+    adaps_data<-merge(adaps_stage_in[c(1,2,3,5)],adaps_disch_in[c(3,5)],by="datetime",all=T)
     adaps_data<-merge(adaps_precip_in[c(3,5)],adaps_data,by="datetime",all=T)
     adaps_data_all <- merge(adaps_data,adaps_scode_in[c(3,5)],by="datetime",all=T)
     colnames(adaps_data_all) <- c("datetime","p00045","agency_cd","site_no","p00065","p00060","p99234")
-  } 
-}} else {
+}}} else {
   adaps_data_in <- read.delim(dataFile,header=TRUE,quote="\"",dec=".",sep="\t",colClasses=c("character"),strip.white=TRUE,fill=TRUE,comment.char="#")
   adaps_data_in <- adaps_data_in[-1, ]
   adaps_data_in$datetime <- as.POSIXct(strptime(paste(adaps_data_in$YEAR,sprintf("%02d",as.numeric(adaps_data_in$MONTH)),sprintf("%02d",as.numeric(adaps_data_in$DAY)),sprintf("%02d",as.numeric(adaps_data_in$MINUTE)%/%60),sprintf("%02d",as.numeric(adaps_data_in$MINUTE)%%60),sep=""),"%Y%m%d%H%M"))
@@ -73,12 +78,19 @@ if ((length(unique(POR$parameter_cd)))+(length(unique(PORprecip$parameter_cd)))>
   adaps_data_all <- data.frame(adaps_data,rep("USGS",nrow(adaps_data)),rep(siteNo,nrow(adaps_data)),stringsAsFactors=FALSE)
   colnames(adaps_data_all) <- c("datetime","p99234","p00045","p00065","p00060","agency_cd","site_no")
 }
-if (length(unique(POR$parameter_cd))>=3) {
-for (i in 1:nrow(adaps_data_all)) {
-  adaps_data_all$cum_00045[i] <- sum(adaps_data_all$p00045[1:i],na.rm=TRUE)
+if ((length(unique(POR$parameter_cd)))+(length(unique(PORprecip$parameter_cd)))>=4) {
+  if (max(POR$startDate[which(POR$service=="uv"&POR$parameter_cd %in% c("00060","00065"))])<=StartDt&min(POR$endDate[which(POR$service=="uv"&POR$parameter_cd %in% c("00060","00065"))])>=EndDt) {
+    for (i in 1:nrow(adaps_data_all)) {
+      adaps_data_all$cum_00045[i] <- sum(adaps_data_all$p00045[1:i],na.rm=TRUE)
+    }
+  return(adaps_data_all) }
+  else {cat(paste("ADAPS data not available via NWISWeb for selected site, date range and parameter codes","\n",sep=""))
+        cat(paste("Available period of record follows: ","\n",sep=""))
+        PORAll <- rbind(POR,PORprecip)
+        print(PORAll[,c("parameter_cd","startDate","endDate","count","parameter_nm")],row.names=FALSE)} 
 }
-return(adaps_data_all)
-} else {cat(paste("ADAPS data not available on via NWISWeb for selected site, date range and parameter codes","\n",sep=" "))
-        cat(paste(POR$parameter_cd,POR$startDate,POR$endDate,POR$count,POR$srsname,"\n",sep=" "))
-        cat(paste(PORprecip$parameter_cd,PORprecip$startDate,PORprecip$endDate,PORprecip$count,PORprecip$srsname,"\n",sep=" "))}
+else {cat(paste("ADAPS data not available via NWISWeb for selected site, date range and parameter codes","\n",sep=""))
+      cat(paste("Available period of record follows: ","\n",sep=""))
+      PORAll <- rbind(POR,PORprecip)
+      print(PORAll[,c("parameter_cd","startDate","endDate","count","parameter_nm")],row.names=FALSE)} 
 }

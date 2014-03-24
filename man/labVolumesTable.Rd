@@ -14,7 +14,7 @@ labVolumesTable(StormName, StormStart, StormEnd, tableOut, bottlePickup)
   \item{tableOut}{list of data frames containing event
   data}
 
-  \item{bottlePickup}{date bottles were retrieved}
+  \item{bottlePickup}{dates bottles were retrieved}
 }
 \description{
 This function accepts a vector of storm names, vector of

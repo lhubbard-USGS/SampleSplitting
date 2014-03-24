@@ -72,7 +72,9 @@ intermediateVolTable(siteNo,StormStart,StormEnd,tableOut)
 
 #Once you are satisfied with the table output
 #enter date(s) when samples were picked up 
-bottlePickup <- c("2012-06-21")
+bottlePickup <- c("2008-05-30","2008-06-05","2008-06-06","2008-06-08",
+                  "2008-06-09","2008-06-10","2008-06-12","2008-06-13","2008-06-14",
+                  "2008-06-15")
 
 # generate text file with storm event sample bottle volume table(s)
 stormEventsTable(StormName,StormStart,StormEnd,tableOut,maxBottleVol,bottlePickup)

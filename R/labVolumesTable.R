@@ -6,10 +6,11 @@
 #' @param StormStart vector of storm start dates
 #' @param StormEnd vector of storm end dates
 #' @param tableOut list of data frames containing event data
-#' @param bottlePickup date bottles were retrieved
+#' @param bottlePickup dates bottles were retrieved
 #' @export
 labVolumesTable <- function(StormName,StormStart,StormEnd,tableOut,bottlePickup){
   fileName <- paste(StormName[1],"labVolumes",".txt",sep="")
+  less <- 0
   sink(fileName)
   for (i in 1:length(StormName)) {
     if (!is.na(tableOut[[i]][1,2])) {
@@ -21,8 +22,9 @@ labVolumesTable <- function(StormName,StormStart,StormEnd,tableOut,bottlePickup)
       cat("\t",labTable$subNum[j],"\t",strftime(labTable$datetime[j]),"\t",labTable$mL[j],"\n")
     }
     cat("==================================================================================","\n")
-    cat("\t","Bottles ",tableOut[[i]]$subNum[1]," through ",tableOut[[i]]$subNum[length(tableOut[[i]]$subNum)]," picked up ",bottlePickup,"\n")
-    cat("==================================================================================","\n")}
+    cat("\t","Bottles ",tableOut[[i]]$subNum[1]," through ",tableOut[[i]]$subNum[length(tableOut[[i]]$subNum)]," picked up ",bottlePickup[i-less],"\n")
+    cat("==================================================================================","\n")
+    } else {less<-less+1}
   }
   sink()
 }

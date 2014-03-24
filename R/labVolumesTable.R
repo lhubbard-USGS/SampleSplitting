@@ -22,7 +22,7 @@ labVolumesTable <- function(StormName,StormStart,StormEnd,tableOut,bottlePickup)
       cat("\t",labTable$subNum[j],"\t",strftime(labTable$datetime[j]),"\t",labTable$mL[j],"\n")
     }
     cat("==================================================================================","\n")
-    cat("\t","Bottles ",tableOut[[i]]$subNum[1]," through ",tableOut[[i]]$subNum[length(tableOut[[i]]$subNum)]," picked up ",bottlePickup[i-less],"\n")
+    cat("\t",bottlePickup[i-less],"\n")
     cat("==================================================================================","\n")
     } else {less<-less+1}
   }

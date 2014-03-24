@@ -25,7 +25,7 @@ stormEventsTable <- function(StormName,StormStart,StormEnd,tableOut,maxBottleVol
     cat("Max Optimized Bottle Volume","\t",max(tableOut[[i]]$mL),"mL\n\n")
     cat("Max Sample Runoff Volume","\t",max(tableOut[[i]]$volume),"cubic feet\n\n")
     cat("Total Sampled Storm Volume","\t",sum(tableOut[[i]]$volume),"cubic feet\n\n")
-    cat("Bottles ",tableOut[[i]]$subNum[1]," through ",tableOut[[i]]$subNum[length(tableOut[[i]]$subNum)]," picked up ",bottlePickup[i-less],"\n\n")
+    cat(bottlePickup[i-less],"\n\n")
     if (!is.na(removeComment[i])) {cat(removeComment[i],"\n\n")}
     volSum <- sum(tableOut[[i]]$volume) + volSum
     cat("========================================================================================================","\n\n")

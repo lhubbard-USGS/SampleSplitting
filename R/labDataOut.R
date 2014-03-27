@@ -23,7 +23,7 @@
 #' StormName <- c("S2-066","S2-067","S2-068","S2-069","S2-070","S2-071","S2-072","S2-073","S2-074","S2-075")
 #' subNum <- c(1,1,1,1,16,1,1,5,1,7)
 #' labDataOut(rdbExample,StormStart,StormEnd,StormName,maxBottleVol,maxSampVol)
-labDataOut <- function(adaps_data_all,StormStart,StormEnd,StormName,maxBottleVol,maxSampVol,removeDate="",subNum=-9) {
+labDataOut <- function(adaps_data_all,StormStart,StormEnd,StormName,maxBottleVol,maxSampVol,removeDate=NA,subNum=-9) {
 adaps_data_samples <- adaps_data_all[which(adaps_data_all$p99234>0),c("datetime","p00060")]
 adaps_data_plot <- adaps_data_all[,c("datetime","p00065","p00060")]
 StormStart <- strptime(StormStart,"%Y-%m-%d %H:%M")
@@ -68,11 +68,15 @@ for (j in 1:numStorms) {
   subMax <- nrow(adaps_samp_storm)+(subStart-1)
   adaps_samp_storm$subNum <- c(subStart:subMax)
   adaps_samp_storm$subNum <- paste(StormName[j],adaps_samp_storm$subNum,sep="-")
-  if (length(removeDate)>1) {
+  if (!is.na(removeDate)) {
     removeDate <- strptime(removeDate,format="%Y-%m-%d %H:%M")
+    numSamples <- nrow(adaps_samp_storm)
     for (i in 1:length(removeDate)) {
       adaps_samp_storm <- adaps_samp_storm[which(adaps_samp_storm$datetime!=removeDate[i]),]
-    }}
+    }
+    if (nrow(adaps_samp_storm)<numSamples){cat(paste(numSamples-nrow(adaps_samp_storm)," samples removed","\n",sep=""))
+                                           cat(paste(removeDate,"\n",sep=""))}
+    }
   adaps_samp_storm$volume <- 9999
   adaps_samp_storm$sampStar <- StartDt
   adaps_samp_storm$sampEnd <- EndDt

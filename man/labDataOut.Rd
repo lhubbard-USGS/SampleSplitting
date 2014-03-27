@@ -3,7 +3,7 @@
 \title{Function to return adaps_lab_samples df derived from previously merged data}
 \usage{
 labDataOut(adaps_data_all, StormStart, StormEnd, StormName, maxBottleVol,
-  maxSampVol, removeDate = "", subNum = -9)
+  maxSampVol, removeDate = NA, subNum = -9)
 }
 \arguments{
   \item{adaps_data_all}{data frame containing merged ADAPS

@@ -68,7 +68,7 @@ for (j in 1:numStorms) {
   subMax <- nrow(adaps_samp_storm)+(subStart-1)
   adaps_samp_storm$subNum <- c(subStart:subMax)
   adaps_samp_storm$subNum <- paste(StormName[j],adaps_samp_storm$subNum,sep="-")
-  if (!is.na(removeDate)) {
+  if (!is.na(max(removeDate))) {
     removeDate <- strptime(removeDate,format="%Y-%m-%d %H:%M")
     numSamples <- nrow(adaps_samp_storm)
     for (i in 1:length(removeDate)) {

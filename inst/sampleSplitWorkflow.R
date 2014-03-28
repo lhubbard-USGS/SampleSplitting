@@ -1,3 +1,8 @@
+# Do only once:
+install.packages(c("googleVis"), dependencies=TRUE)
+install.packages(c("dataRetrieval"), repos="http://usgs-r.github.com")
+install.packages(c("SampleSplitting"), repos="http://usgs-r.github.com",type="source")
+#############################################
 library(SampleSplitting)
 library(dataRetrieval)
 library(googleVis)

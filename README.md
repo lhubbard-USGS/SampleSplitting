@@ -4,9 +4,9 @@ SampleSplitting
 Calculates sample bottle volumes for a given USGS station and storm event(s)
 
 To install this package use the following code:
-install.packages(c("SampleSplitting"),repos="http://usgs-r.github.com")
+install.packages(c("SampleSplitting"),repos="http://usgs-r.github.com",type="source")
 
-An example workflow script is available at https://github.com/USGS-R/SampleSplitting/blob/master/sampleSplitWorkflow.R
+An example workflow script is available at https://github.com/USGS-R/SampleSplitting/blob/master/sampleSplitWorkflow.R or in your R package library (eg C:\Users\jlthomps\Documents\R\win-library\2.14\SampleSplitting\sampleSplitWorkflow.R)
 
 Explanation of the calculations in the labDataOut function follow:
 

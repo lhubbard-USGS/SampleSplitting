@@ -45,6 +45,7 @@
 \newcommand{\Rfunarg}[1]{{\texttt{#1}}}
 
 \begin{document}
+\SweaveOpts{concordance=TRUE}
 
 
 <<openLibrary, echo=FALSE>>=
@@ -83,18 +84,21 @@ knit_hooks$set(crop = hook_pdfcrop)
 
 SampleSplitting: An R package for the automation of splitting time-paced runoff event samples, including creation of summary table for laboratory use.
 
-The best way to learn about the time-paced runoff event sampling technique is to read the USGS Open-file Report that summarizes data collection, processing and analysis for the Discovery Farms and Pioneer Farm sites in Wisconsin. The url is \cite{Stuntebeck}:
+The best way to learn about the time-paced runoff event sampling technique is to read the USGS Open-file Report that summarizes data collection, processing and analysis for the Discovery Farms and Pioneer Farm sites in Wisconsin. The url for (\cite{Stuntebeck} Stuntebeck, et al. 2008) is 
 \url{http://pubs.usgs.gov/of/2008/1015/pdf/ofr2008-1015.pdf}
 
-This vignette assumes that the user understands the basics of runoff event sampling and the USGS ADAPs system. The vignette will walk through an example workflow using provided data for a real storm event. An example workflow script is also provided online at \url {https://github.com/USGS-R/SampleSplitting/blob/master/sampleSplitWorkflow.R}
+This vignette assumes that the user understands the basics of runoff event sampling and the USGS ADAPs system. The vignette will walk through an example workflow using provided data for a real storm event. An example workflow script is also provided online at \url {https://github.com/USGS-R/SampleSplitting/blob/master/sampleSplitWorkflow.R} and in your local R package library (eg C:\Users\jlthomps\Documents\R\win-library\2.14\SampleSplitting\sampleSplitWorkflow.R).
 
 This package also requires the use of the packages googleVis and dataRetrieval. The googleVis package provides an interface between the Google Charts API and R, for the creation of interactive charts. The dataRetrieval package enables easy retrieval of USGS data from available web services or user provided data files.
+
+For information on getting started in R and installing the package, see (\ref{sec:started}):Getting Started in R. 
 
 %------------------------------------------------------------
 \section{General Workflow}
 %------------------------------------------------------------ 
 
-This example vignette first loads the relevant packages (assuming they are already installed) and the included sample data. In your use, you would need to load the packages, but not the given example data. 
+This example vignette first loads the relevant packages (assuming they are already installed) and the included sample data. In your use, you would need to load the packages, but not the given example data.
+First, it is a good practice to clear any existing objects from your working environment. In RStudio, in the upper right quadrant, there is a broom icon that says 'Clear'. Click this and select 'Yes' to remove objects. This allows you to being work with a clear workspace, negating the possibility of mis-identified variables. 
 
 <<workflow, echo=TRUE,eval=FALSE>>=
 library(SampleSplitting)
@@ -154,7 +158,7 @@ plot(hydrographPlot)
 hydrographPDF(adaps_data_all,siteNo,dateInt=8)
 @
 
-Now that storm start and end times have been determined, it is time to enter information for each event. You must enter a StormStart, StormEnd and StormName for each event. For sampled events, you must also enter maxBottleVol, maxSampleVol and subNum. These values must be in order (eg, all lists must be in the same order as the StormNames). If you have unsampled storms, just skip the maxBottleVol, maxSampVol and subNum for those. So, if I have 3 storm events - "S1-01","S1-02","S1-03" - and S1-02 wasn't sampled, my lists might be:
+Now that storm start and end times have been determined, it is time to enter information for each event. You must enter a StormStart, StormEnd and StormName for each event. For sampled events, you must also enter maxBottleVol, maxSampleVol and subNum. These values must be in order (eg, all lists must be in the same order as the StormName list). If you have unsampled storms, just skip the maxBottleVol, maxSampVol and subNum for those. So, if I have 3 storm events - "S1-01","S1-02","S1-03" - and S1-02 wasn't sampled, my lists might be:
 \begin{verbatim}
 StormName     c("S1-01","S1-02","S1-03")
 StormStart    c("2012-04-01 14:00","2012-04-02 20:30","2012-04-05 10:15")
@@ -239,7 +243,17 @@ When you are satisfied with the sample splitting volume calculations, it is time
 <<generateFiles, echo=TRUE,eval=FALSE>>=
 #Once you are satisfied with the table output
 #enter date(s) when samples were picked up 
-bottlePickup <- c("2012-06-21")
+bottlePickup <- c("Bottles S2-1 through S2-26 picked up 2008-05-30",
+                  "Bottles S2-1 through S2-15 picked up 2008-06-05",
+                  "Bottles S2-1 through S2-6 picked up 2008-06-06",
+                  "Bottles S2-1 through S2-9 picked up 2008-06-07 and 
+                  bottles S2-10 through S2-15 picked up 2008-06-08",
+                  "Bottles S2-16 through S2-25 picked up 2008-06-09",
+                  "Bottles S2-1 through S2-9 picked up 2008-06-10",
+                  "Bottles S2-1 through S2-7 picked up 2008-06-12",
+                  "Bottles S2-5 through S2-25 picked up 2008-06-13",
+                  "Bottles S2-1 through S2-6 picked up 2008-06-14",
+                  "Bottles S2-7 through S2-17 picked up 2008-06-15")
 
 # generate text file with storm event sample bottle 
 # volume table(s)
@@ -254,13 +268,14 @@ labVolumesTable(StormName,StormStart,StormEnd,tableOut,
 
 %------------------------------------------------------------ 
 \section{Getting Started in R}
+\label{sec:started}
 %------------------------------------------------------------ 
 This section describes the options for downloading and installing the sampleSplitting package.
 
 %------------------------------------------------------------
 \subsection{New to R?}
 %------------------------------------------------------------ 
-If you are new to R, you will need to first install the latest version of R, which can be found here: \url{http://www.r-project.org/}.
+If you are new to R, you will need to first install the latest version of R, which can be found here: \url{http://www.r-project.org/}. There is also a useful USGS site for R help at \url{http://bwtst.usgs.gov/apps/R/index.html}.
 
 There are many options for running and editing R code, one nice environment to learn R is RStudio. RStudio can be downloaded here: \url{http://rstudio.org/}. Once R and RStudio are installed, the dataRetrieval package needs to be installed as described in the next section.
 
@@ -284,10 +299,12 @@ Before installing sampleSplitting, the supporting packages must be first be inst
 <<installFromCran,eval = FALSE>>=
 install.packages(c("googleVis"), dependencies=TRUE)
 install.packages(c("dataRetrieval"), repos="http://usgs-r.github.com")
-install.packages(c("SampleSplitting"), repos="http://usgs-r.github.com")
+install.packages(c("SampleSplitting"),repos="http://usgs-r.github.com",
+                 type="source")
 @
 
-It is a good idea to re-start R after installing the package, especially if installing an updated version. Some users have found it necessary to delete the previous version's package folder before installing newer version of dataRetrieval. If you are experiencing issues after updating a package, trying deleting the package folder - the default location for Windows is something like this: C:/Users/userA/Documents/R/win-library/2.15/dataRetrieval, and the default for a Mac: /Users/userA/Library/R/2.15/library/dataRetrieval. Then, re-install the package using the directions above. Moving to CRAN should solve this problem.
+It is a good idea to re-start R after installing the package, especially if installing an updated version. Some users have found it necessary to delete the previous version's package folder before installing newer version of dataRetrieval. If you are experiencing issues after updating a package, trying deleting the package folder - the default location for Windows is something like this: C:/Users/userA/Documents/R/win-library/2.15/dataRetrieval, and the default for a Mac: 
+/Users/userA/Library/R/2.15/library/dataRetrieval. Then, re-install the package using the directions above. Moving to CRAN should solve this problem.
 
 After installing the package, you need to open the library each time you re-start R.  This is done with the simple command:
 <<openLibraryTest, eval=FALSE>>=

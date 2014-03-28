@@ -1,6 +1,6 @@
 \select@language {american}
 \contentsline {section}{\numberline {1}Introduction to SampleSplitting}{1}{section.1}
 \contentsline {section}{\numberline {2}General Workflow}{2}{section.2}
-\contentsline {section}{\numberline {3}Getting Started in R}{5}{section.3}
-\contentsline {subsection}{\numberline {3.1}New to R?}{5}{subsection.3.1}
+\contentsline {section}{\numberline {3}Getting Started in R}{6}{section.3}
+\contentsline {subsection}{\numberline {3.1}New to R?}{6}{subsection.3.1}
 \contentsline {subsection}{\numberline {3.2}R User: Installing sampleSplitting}{6}{subsection.3.2}

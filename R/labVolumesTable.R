@@ -19,7 +19,7 @@ labVolumesTable <- function(StormName,StormStart,StormEnd,tableOut,bottlePickup)
     cat("==================================================================================","\n")
     labTable <- tableOut[[i]]
     for (j in 1:nrow(labTable)) {
-      cat("\t",labTable$subNum[j],"\t",strftime(labTable$datetime[j]),"\t",labTable$mL[j],"\n")
+      cat("\t",paste0(labTable$subNum[j],paste0(rep(" ",max(nchar(labTable$subNum))),collapse=""),collapse=""),"\t",strftime(labTable$datetime[j]),"\t",labTable$mL[j],"\n")
     }
     cat("==================================================================================","\n")
     cat("\t",bottlePickup[i-less],"\n")

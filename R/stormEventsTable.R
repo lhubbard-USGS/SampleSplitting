@@ -17,11 +17,12 @@ stormEventsTable <- function(StormName,StormStart,StormEnd,tableOut,maxBottleVol
   sink(fileName)
   for (i in 1:length(StormName)) {
     if (!is.na(tableOut[[i]][1,2])) {
-    cat(StormName[i],"\t",strftime(StormStart[i]),"\t",strftime(StormEnd[i]),"\n\n")
+    cat(StormName[i],"\t",strftime(StormStart[i],format="%Y-%m-%d %H:%M"),"\t",strftime(StormEnd[i],format="%Y-%m-%d %H:%M"),"\n\n")
     print(tableOut[[i]],row.names=FALSE)
     cat("\n\n")
     cat("Lab Sample Volume","\t",sum(tableOut[[i]]$mL),"mL\t",sum(tableOut[[i]]$perc),"percent\n\n")
     cat("Max Bottle Volume","\t",maxBottleVol[i-less],"mL\n\n")
+    cat("Total subsample bottles","\t",nrow(tableOut[[i]]),"\n\n")
     cat("Max Optimized Bottle Volume","\t",max(tableOut[[i]]$mL),"mL\n\n")
     cat("Max Sample Runoff Volume","\t",max(tableOut[[i]]$volume),"cubic feet\n\n")
     cat("Total Sampled Storm Volume","\t",sum(tableOut[[i]]$volume),"cubic feet\n\n")
@@ -31,7 +32,7 @@ stormEventsTable <- function(StormName,StormStart,StormEnd,tableOut,maxBottleVol
     cat("========================================================================================================","\n\n")
     } else {
       less <- less+1
-      cat(StormName[i],"\t",strftime(StormStart[i]),"\t",strftime(StormEnd[i]),"\n\n")
+      cat(StormName[i],"\t",strftime(StormStart[i],format="%Y-%m-%d %H:%M"),"\t",strftime(StormEnd[i],format="%Y-%m-%d %H:%M"),"\n\n")
       cat("Total Sampled Storm Volume","\t",sum(tableOut[[i]]$volume),"cubic feet\n\n")
       volSum <- sum(tableOut[[i]]$volume) + volSum
       cat("========================================================================================================","\n\n")

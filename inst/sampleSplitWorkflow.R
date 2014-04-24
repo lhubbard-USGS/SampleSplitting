@@ -38,6 +38,7 @@ hydrographPDF(adaps_data_all,siteNo,dateInt=8)
 # IF you have un-sampled storms, you may enter their StormStart and StormEnd values, as well as StormNames in 
 # the appropriate list. Leave them out of the maxBottleVol, maxSampVol and subNum lists
 # enter the name of the storm(s) (for plot title)
+# MUST be in the format Name-Number
 StormName <- c("S2-066","S2-066A","S2-067","S2-068","S2-069","S2-070","S2-071","S2-072","S2-073","S2-074","S2-075")
 # enter Storm Start date(s)
 # MUST be in the format YYYY-MM-DD HH:24

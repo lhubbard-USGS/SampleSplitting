@@ -87,7 +87,7 @@ SampleSplitting: An R package for the automation of splitting time-paced runoff 
 The best way to learn about the time-paced runoff event sampling technique is to read the USGS Open-file Report that summarizes data collection, processing and analysis for the Discovery Farms and Pioneer Farm sites in Wisconsin. The url for (\cite{Stuntebeck} Stuntebeck, et al. 2008) is 
 \url{http://pubs.usgs.gov/of/2008/1015/pdf/ofr2008-1015.pdf}
 
-This vignette assumes that the user understands the basics of runoff event sampling and the USGS ADAPs system. The vignette will walk through an example workflow using provided data for a real storm event. An example workflow script is also provided online at \url {https://github.com/USGS-R/SampleSplitting/blob/master/sampleSplitWorkflow.R} and in your local R package library (eg C:\Users\jlthomps\Documents\R\win-library\2.14\SampleSplitting\sampleSplitWorkflow.R).
+This vignette assumes that the user understands the basics of runoff event sampling and the USGS ADAPs system. The vignette will walk through an example workflow using provided data for a real storm event. An example workflow script is also provided online at \url {https://github.com/USGS-R/SampleSplitting/tree/master/inst} and in your local R package library (eg C:\Users\jlthomps\Documents\R\win-library\2.14\SampleSplitting\sampleSplitWorkflow.R).
 
 This package also requires the use of the packages googleVis and dataRetrieval. The googleVis package provides an interface between the Google Charts API and R, for the creation of interactive charts. The dataRetrieval package enables easy retrieval of USGS data from available web services or user provided data files.
 

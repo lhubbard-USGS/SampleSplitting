@@ -1,7 +1,7 @@
 %\VignetteIndexEntry{Introduction to the SampleSplitting package}
 %\VignetteEngine{knitr::knitr}
 %\VignetteDepends{}
-%\VignetteSuggests{knitr,xtable}
+%\VignetteSuggests{xtable}
 %\VignetteImports{dataRetrieval,googleVis}
 %\VignettePackage{SampleSplitting}
 
@@ -17,6 +17,8 @@
 \usepackage{placeins}
 \usepackage{footnote}
 \usepackage{tabularx}
+\usepackage{threeparttable}
+\usepackage{parskip}
 \renewcommand\Affilfont{\itshape\small}
 
 \renewcommand{\topfraction}{0.85}
@@ -45,7 +47,6 @@
 \newcommand{\Rfunarg}[1]{{\texttt{#1}}}
 
 \begin{document}
-\SweaveOpts{concordance=TRUE}
 
 
 <<openLibrary, echo=FALSE>>=
@@ -87,7 +88,7 @@ SampleSplitting: An R package for the automation of splitting time-paced runoff 
 The best way to learn about the time-paced runoff event sampling technique is to read the USGS Open-file Report that summarizes data collection, processing and analysis for the Discovery Farms and Pioneer Farm sites in Wisconsin. The url for (\cite{Stuntebeck} Stuntebeck, et al. 2008) is 
 \url{http://pubs.usgs.gov/of/2008/1015/pdf/ofr2008-1015.pdf}
 
-This vignette assumes that the user understands the basics of runoff event sampling and the USGS ADAPs system. The vignette will walk through an example workflow using provided data for a real storm event. An example workflow script is also provided online at \url {https://github.com/USGS-R/SampleSplitting/tree/master/inst} and in your local R package library (eg C:\Users\jlthomps\Documents\R\win-library\2.14\SampleSplitting\sampleSplitWorkflow.R).
+This vignette assumes that the user understands the basics of runoff event sampling and the USGS ADAPs system. The vignette will walk through an example workflow using provided data for a real storm event. An example workflow script is also provided online at \url {https://github.com/USGS-R/SampleSplitting/tree/master/inst} and in your local R package library.
 
 This package also requires the use of the packages googleVis and dataRetrieval. The googleVis package provides an interface between the Google Charts API and R, for the creation of interactive charts. The dataRetrieval package enables easy retrieval of USGS data from available web services or user provided data files.
 
@@ -95,10 +96,11 @@ For information on getting started in R and installing the package, see (\ref{se
 
 %------------------------------------------------------------
 \section{General Workflow}
+\label{sec:genWorkflow}
 %------------------------------------------------------------ 
 
 This example vignette first loads the relevant packages (assuming they are already installed) and the included sample data. In your use, you would need to load the packages, but not the given example data.
-First, it is a good practice to clear any existing objects from your working environment. In RStudio, in the upper right quadrant, there is a broom icon that says 'Clear'. Click this and select 'Yes' to remove objects. This allows you to being work with a clear workspace, negating the possibility of mis-identified variables. 
+First, it is a good practice to clear any existing objects from your working environment. In RStudio, in the upper right quadrant, there is a broom icon that says \texttt{"}Clear\texttt{"}. Click this and select \texttt{"}Yes\texttt{"} to remove objects. This allows you to being work with a clear workspace, negating the possibility of mis-identified variables. 
 
 <<workflow, echo=TRUE,eval=FALSE>>=
 library(SampleSplitting)
@@ -135,7 +137,7 @@ Normally, the user will now run the getADAPSData function with or without a data
 adaps_data_all <- ExampleData
 @
 
-The retrieved data is now saved as a comma-separated text file, in case you need to refer to it later. The file will be saved to your present working directory. If you are unsure of that location, you can run: "getwd()" at the R prompt to discover this information.
+The retrieved data is now saved as a comma-separated text file, in case you need to refer to it later. The file will be saved to your present working directory. If you are unsure of that location, you can run: \texttt{"}getwd()\texttt{"} at the R prompt to discover this information.
 
 <<saveData, echo=TRUE,eval=FALSE>>=
 ###############################################
@@ -158,7 +160,7 @@ plot(hydrographPlot)
 hydrographPDF(adaps_data_all,siteNo,dateInt=8)
 @
 
-Now that storm start and end times have been determined, it is time to enter information for each event. You must enter a StormStart, StormEnd and StormName for each event. For sampled events, you must also enter maxBottleVol, maxSampleVol and subNum. These values must be in order (eg, all lists must be in the same order as the StormName list). If you have unsampled storms, just skip the maxBottleVol, maxSampVol and subNum for those. So, if I have 3 storm events - "S1-01","S1-02","S1-03" - and S1-02 wasn't sampled, my lists might be:
+Now that storm start and end times have been determined, it is time to enter information for each event. You must enter a StormStart, StormEnd and StormName for each event. For sampled events, you must also enter maxBottleVol, maxSampleVol and subNum. These values must be in order (eg, all lists must be in the same order as the StormName list). If you have unsampled storms, just skip the maxBottleVol, maxSampVol and subNum for those. So, if I have 3 storm events - \texttt{"}S1-01\texttt{"},\texttt{"}S1-02\texttt{"},\texttt{"}S1-03\texttt{"} - and S1-02 wasn't sampled, my lists might be:
 \begin{verbatim}
 StormName     c("S1-01","S1-02","S1-03")
 StormStart    c("2012-04-01 14:00","2012-04-02 20:30","2012-04-05 10:15")
@@ -266,6 +268,9 @@ labVolumesTable(StormName,StormStart,StormEnd,tableOut,
 
 @
 
+\FloatBarrier
+\clearpage
+
 %------------------------------------------------------------ 
 \section{Getting Started in R}
 \label{sec:started}
@@ -291,14 +296,21 @@ To see the raw code for a particular code, type the name of the function:
 getADAPSData
 @
 
+Additionally, many R packages have vignette files attached (such as this paper). To view the vignette:
+<<seeVignette,eval = FALSE>>=
+vignette(SampleSplitting)
+@
+
+\FloatBarrier
+\clearpage
 %------------------------------------------------------------
-\subsection{R User: Installing sampleSplitting}
+\subsection{R User: Installing SampleSplitting}
 %------------------------------------------------------------ 
-Before installing sampleSplitting, the supporting packages must be first be installed:
+Before installing SampleSplitting, the supporting packages must be first be installed:
 
 <<installFromCran,eval = FALSE>>=
 install.packages(c("googleVis"), dependencies=TRUE)
-install.packages(c("dataRetrieval"), repos="http://usgs-r.github.com")
+install.packages(c("dataRetrieval"), repos="http://usgs-r.github.com",type="source")
 install.packages(c("SampleSplitting"),repos="http://usgs-r.github.com",
                  type="source")
 @

@@ -3,4 +3,4 @@
 \contentsline {section}{\numberline {2}General Workflow}{2}{section.2}
 \contentsline {section}{\numberline {3}Getting Started in R}{6}{section.3}
 \contentsline {subsection}{\numberline {3.1}New to R?}{6}{subsection.3.1}
-\contentsline {subsection}{\numberline {3.2}R User: Installing sampleSplitting}{6}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.2}R User: Installing SampleSplitting}{7}{subsection.3.2}

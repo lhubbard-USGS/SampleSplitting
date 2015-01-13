@@ -53,29 +53,29 @@ PORprecip <- paramAvailability(precipSite)
 PORprecip <- PORprecip[which(PORprecip$service=="uv"&PORprecip$parameter_cd=="00045"),]
 if ((length(unique(POR$parameter_cd)))+(length(unique(PORprecip$parameter_cd)))>=4) {
   if (max(POR$startDate[which(POR$service=="uv"&POR$parameter_cd %in% c("00060","00065"))])<=StartDt&min(POR$endDate[which(POR$service=="uv"&POR$parameter_cd %in% c("00060","00065"))])>=EndDt) {
-    if (as.Date(StartDt,"%Y-%m-%d")<=(Sys.Date-120)) {type<-"uv"} else {type<-"iv"}
-    stage_url <- constructNWISURL(siteNo,'00065',StartDt,EndDt,type,format="tsv",interactive=FALSE)
+    if (as.Date(StartDt,"%Y-%m-%d")<=(Sys.Date()-120)) {type<-"uv"} else {type<-"iv"}
+    stage_url <- constructNWISURL(siteNo,'00065',StartDt,EndDt,type,format="tsv")
     stage_url <- paste(stage_url,"&access=",max(POR$status[which(POR$parameter_cd=="00065")]),sep="")
-    adaps_stage_in <- getRDB1Data(stage_url,asDateTime=TRUE)
+    adaps_stage_in <- importRDB1(stage_url,asDateTime=TRUE)
     colnames(adaps_stage_in) <- c("agency_cd","site_no","datetime","tz_cd","p00065","p00065_cd")
-    disch_url <- constructNWISURL(siteNo,'00060',StartDt,EndDt,type,format="tsv",interactive=FALSE)
+    disch_url <- constructNWISURL(siteNo,'00060',StartDt,EndDt,type,format="tsv")
     disch_url <- paste(disch_url,"&access=",max(POR$status[which(POR$parameter_cd=="00060")]),sep="")
-    adaps_disch_in <- getRDB1Data(disch_url,asDateTime=TRUE)
+    adaps_disch_in <- importRDB1(disch_url,asDateTime=TRUE)
     colnames(adaps_disch_in) <- c("agency_cd","site_no","datetime","tz_cd","p00060","p00060_cd")
     if (siteNo!=precipSite) {
-      precip_url <- constructNWISURL(precipSite,'00045',StartDt,EndDt,type,format="tsv",interactive=FALSE)
+      precip_url <- constructNWISURL(precipSite,'00045',StartDt,EndDt,type,format="tsv")
       precip_url <- paste(precip_url,"&access=",max(PORprecip$status),sep="")
-      adaps_precip_in <- getRDB1Data(precip_url,asDateTime=TRUE)
+      adaps_precip_in <- importRDB1(precip_url,asDateTime=TRUE)
       colnames(adaps_precip_in) <- c("agency_cd","site_no","datetime","tz_cd","p00045","p00045_cd")
     } else {
-      precip_url <- constructNWISURL(precipSite,'00045',StartDt,EndDt,type,format="tsv",interactive=FALSE)
+      precip_url <- constructNWISURL(precipSite,'00045',StartDt,EndDt,type,format="tsv")
       precip_url <- paste(precip_url,"&access=",max(PORprecip$status),sep="")
-      adaps_precip_in <- getRDB1Data(precip_url,asDateTime=TRUE)
+      adaps_precip_in <- importRDB1(precip_url,asDateTime=TRUE)
       colnames(adaps_precip_in) <- c("agency_cd","site_no","datetime","tz_cd","p00045","p00045_cd")
     }
-    scode_url <- constructNWISURL(siteNo,'99234',StartDt,EndDt,type,format="tsv",interactive=FALSE)
+    scode_url <- constructNWISURL(siteNo,'99234',StartDt,EndDt,type,format="tsv")
     scode_url <- paste(scode_url,"&access=",max(POR$status[which(POR$parameter_cd=="99234")]),sep="")
-    adaps_scode_in <- getRDB1Data(scode_url,asDateTime=TRUE)
+    adaps_scode_in <- importRDB1(scode_url,asDateTime=TRUE)
     colnames(adaps_scode_in) <- c("agency_cd","site_no","datetime","tz_cd","p99234","p99234_cd")
     adaps_scode_in <- subset(adaps_scode_in,adaps_scode_in$p99234>900)
     adaps_data<-merge(adaps_stage_in[c(1,2,3,5)],adaps_disch_in[c(3,5)],by="datetime",all=T)

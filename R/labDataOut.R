@@ -96,8 +96,8 @@ for (j in 1:numStorms) {
     adaps_samp_storm$volume[i] <- sum(adaps_data_storm_temp$volume,na.rm=TRUE)
     adaps_data_storm_temp$datetime[1] <- sampStartOut
     adaps_data_storm_temp$datetime[nrow(adaps_data_storm_temp)] <- sampEndOut
-    adaps_samp_storm$sampStar[i] <- sampStartOut
-    adaps_samp_storm$sampEnd[i] <- sampEndOut
+    adaps_samp_storm$sampStar[i] <- strftime(sampStartOut)
+    adaps_samp_storm$sampEnd[i] <- strftime(sampEndOut)
     adaps_samp_storm$subNum[i] <- paste(strsplit(adaps_samp_storm$subNum[i],"-")[[1]][1],strsplit(adaps_samp_storm$subNum[i],"-")[[1]][3],sep="-")
     adaps_data_storm_temp$samplesNum <- rep(adaps_samp_storm$subNum[i],nrow(adaps_data_storm_temp))
     adaps_data_samp <- if (i+j>2) {rbind(adaps_data_samp,adaps_data_storm_temp)} else {adaps_data_storm_temp}

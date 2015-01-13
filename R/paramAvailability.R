@@ -53,7 +53,7 @@ paramAvailability <- function (siteNo) {
   SiteFile$count <- as.numeric(SiteFile$count)
   SiteFile <- merge(SiteFile,access_cd,by=c("parameter_cd","statCd","service"))
   pCodes <- unique(SiteFile$parameter_cd)
-  pcodeINFO <- getParameterInfo(pCodes, interactive)
+  pcodeINFO <- readNWISpCode(pCodes)
   SiteFile <- merge(SiteFile, pcodeINFO, by = "parameter_cd")
   return(SiteFile)
 }

@@ -1,11 +1,12 @@
 #' Function to return adaps_data_all df from NWISWeb or previously retrieved RDB files
 #' 
-#' This function accepts an NWIS gage site id, an NWIS precip site id, a StartDate, an EndDate and file names as needed
+#' This function accepts an NWIS gage site id, an NWIS precip site id, a StartDate, an EndDate, a timezone and file names as needed
 #' 
 #' @param siteNo NWIS gaging station id
 #' @param precipSite NWIS precipitation station id
 #' @param StartDt a date to start data pulls
 #' @param EndDt a date to end data pulls
+#' @param tzCode a timezone specification for the data
 #' @param dataFile string of data file path and name
 #' @return adaps_data_all data frame containing merged ADAPS data for the requested site and date range
 #' @import dataRetrieval
@@ -15,9 +16,9 @@
 #' siteNo <- "424314090240601"
 #' StartDt <- '2008-05-30'
 #' EndDt <- '2008-06-15'
-#' getADAPSData(siteNo,StartDt,EndDt,siteNo,dataFile)
+#' getADAPSData(siteNo,StartDt,EndDt,siteNo,dataFile,tzCode="America/Chicago")
 #' }
-getADAPSData <- function(siteNo,StartDt,EndDt,precipSite,dataFile="") {
+getADAPSData <- function(siteNo,StartDt,EndDt,precipSite,dataFile="",tzCode="") {
 if (nchar(dataFile)>=3) {
   adaps_data_in <- read.delim(dataFile,header=TRUE,quote="\"",dec=".",sep="\t",colClasses=c("character"),strip.white=TRUE,fill=TRUE,comment.char="#")
   adaps_data_in <- adaps_data_in[-1, ]
@@ -56,26 +57,26 @@ if ((length(unique(POR$parameter_cd)))+(length(unique(PORprecip$parameter_cd)))>
     if (as.Date(StartDt,"%Y-%m-%d")<=(Sys.Date()-120)) {type<-"uv"} else {type<-"iv"}
     stage_url <- constructNWISURL(siteNo,'00065',StartDt,EndDt,type,format="tsv")
     stage_url <- paste(stage_url,"&access=",max(POR$status[which(POR$parameter_cd=="00065")]),sep="")
-    adaps_stage_in <- importRDB1(stage_url,asDateTime=TRUE)
+    adaps_stage_in <- importRDB1(stage_url,asDateTime=TRUE,tz=tzCode)
     colnames(adaps_stage_in) <- c("agency_cd","site_no","datetime","tz_cd","p00065","p00065_cd")
     disch_url <- constructNWISURL(siteNo,'00060',StartDt,EndDt,type,format="tsv")
     disch_url <- paste(disch_url,"&access=",max(POR$status[which(POR$parameter_cd=="00060")]),sep="")
-    adaps_disch_in <- importRDB1(disch_url,asDateTime=TRUE)
+    adaps_disch_in <- importRDB1(disch_url,asDateTime=TRUE,tz=tzCode)
     colnames(adaps_disch_in) <- c("agency_cd","site_no","datetime","tz_cd","p00060","p00060_cd")
     if (siteNo!=precipSite) {
       precip_url <- constructNWISURL(precipSite,'00045',StartDt,EndDt,type,format="tsv")
       precip_url <- paste(precip_url,"&access=",max(PORprecip$status),sep="")
-      adaps_precip_in <- importRDB1(precip_url,asDateTime=TRUE)
+      adaps_precip_in <- importRDB1(precip_url,asDateTime=TRUE,tz=tzCode)
       colnames(adaps_precip_in) <- c("agency_cd","site_no","datetime","tz_cd","p00045","p00045_cd")
     } else {
       precip_url <- constructNWISURL(precipSite,'00045',StartDt,EndDt,type,format="tsv")
       precip_url <- paste(precip_url,"&access=",max(PORprecip$status),sep="")
-      adaps_precip_in <- importRDB1(precip_url,asDateTime=TRUE)
+      adaps_precip_in <- importRDB1(precip_url,asDateTime=TRUE,tz=tzCode)
       colnames(adaps_precip_in) <- c("agency_cd","site_no","datetime","tz_cd","p00045","p00045_cd")
     }
     scode_url <- constructNWISURL(siteNo,'99234',StartDt,EndDt,type,format="tsv")
     scode_url <- paste(scode_url,"&access=",max(POR$status[which(POR$parameter_cd=="99234")]),sep="")
-    adaps_scode_in <- importRDB1(scode_url,asDateTime=TRUE)
+    adaps_scode_in <- importRDB1(scode_url,asDateTime=TRUE,tz=tzCode)
     colnames(adaps_scode_in) <- c("agency_cd","site_no","datetime","tz_cd","p99234","p99234_cd")
     adaps_scode_in <- subset(adaps_scode_in,adaps_scode_in$p99234>900)
     adaps_data<-merge(adaps_stage_in[c(1,2,3,5)],adaps_disch_in[c(3,5)],by="datetime",all=T)

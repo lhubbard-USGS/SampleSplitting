@@ -4,7 +4,7 @@
 \alias{getADAPSData}
 \title{Function to return adaps_data_all df from NWISWeb or previously retrieved RDB files}
 \usage{
-getADAPSData(siteNo, StartDt, EndDt, precipSite, dataFile = "")
+getADAPSData(siteNo, StartDt, EndDt, precipSite, dataFile = "", tzCode = "")
 }
 \arguments{
 \item{siteNo}{NWIS gaging station id}
@@ -16,19 +16,21 @@ getADAPSData(siteNo, StartDt, EndDt, precipSite, dataFile = "")
 \item{precipSite}{NWIS precipitation station id}
 
 \item{dataFile}{string of data file path and name}
+
+\item{tzCode}{a timezone specification for the data}
 }
 \value{
 adaps_data_all data frame containing merged ADAPS data for the requested site and date range
 }
 \description{
-This function accepts an NWIS gage site id, an NWIS precip site id, a StartDate, an EndDate and file names as needed
+This function accepts an NWIS gage site id, an NWIS precip site id, a StartDate, an EndDate, a timezone and file names as needed
 }
 \examples{
 \dontrun{
 siteNo <- "424314090240601"
 StartDt <- '2008-05-30'
 EndDt <- '2008-06-15'
-getADAPSData(siteNo,StartDt,EndDt,siteNo,dataFile)
+getADAPSData(siteNo,StartDt,EndDt,siteNo,dataFile,tzCode="America/Chicago")
 }
 }
 

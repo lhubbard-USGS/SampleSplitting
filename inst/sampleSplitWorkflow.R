@@ -1,6 +1,6 @@
 # Do only once:
 install.packages(c("googleVis"), dependencies=TRUE)
-install.packages(c("dataRetrieval"), repos="http://usgs-r.github.com")
+install.packages(c("dataRetrieval"), dependencies=TRUE)
 install.packages(c("SampleSplitting"), repos="http://usgs-r.github.com",type="source")
 #############################################
 library(SampleSplitting)
@@ -14,13 +14,16 @@ StartDt <- '2008-05-30'
 EndDt <- '2008-06-15'
 # enter NWIS station id for precipitation gaging station, may or may not be identical to "siteNo"
 precipSite <- "434425090462401"
+# enter a timezone to return data in for data retrieved from the web
+# choose from America/Chicago, America/New_York, America/Denver, America/Los_Angeles, America/Phoenix, America/Anchorage, America/Honolulu, America/Jamaica, America/Metlakatla, America/Managua
+tzCode <- "America/Chicago"
 
 # enter path and name of data file if data is not web-available
 dataFile <- "M:/NonPoint Evaluation/GLRI Edge-of-field/Splitting Record Conversion to R/PLAT2TESTJLT.RDB"
 
 # Run ONLY 1 of these options, depending on whether you are pulling data from the web, or providing a file
 # Retrieve data from NWISWeb (if available)
-adaps_data_all <- getADAPSData(siteNo,StartDt,EndDt,precipSite)
+adaps_data_all <- getADAPSData(siteNo,StartDt,EndDt,precipSite,tzCode)
 # or use file names to pull data in from files exported by ADAPS
 adaps_data_all <- getADAPSData(siteNo,StartDt,EndDt,precipSite,dataFile)
 

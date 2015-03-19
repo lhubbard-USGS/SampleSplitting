@@ -23,7 +23,7 @@ dataFile <- "M:/NonPoint Evaluation/GLRI Edge-of-field/Splitting Record Conversi
 
 # Run ONLY 1 of these options, depending on whether you are pulling data from the web, or providing a file
 # Retrieve data from NWISWeb (if available)
-adaps_data_all <- getADAPSData(siteNo,StartDt,EndDt,precipSite,tzCode)
+adaps_data_all <- getADAPSData(siteNo,StartDt,EndDt,precipSite,tzCode=tzCode)
 # or use file names to pull data in from files exported by ADAPS
 adaps_data_all <- getADAPSData(siteNo,StartDt,EndDt,precipSite,dataFile)
 

@@ -5,7 +5,7 @@ install.packages(c("SampleSplitting"), repos="http://usgs-r.github.com")
 # install_github("jlthomps/SampleSplitting")
 install.packages(c("USGSwsData", "USGSwsBase", "USGSwsGraphs", "USGSwsStats", "USGSwsQW"), repos="http://usgs-r.github.com")
 install.packages(c("XML", "digest", "memoise", "lubridate", "akima", "leaps", "car", "mvtnorm", "relimp", "BSDA", "RODBC"), dependencies=TRUE)
-insta########################################################################################################
+########################################################################################################
 library(SampleSplitting)
 library(dataRetrieval)
 library(googleVis)
@@ -73,15 +73,17 @@ for (i in 1:length(StormStart)){
 #Output csv file of all intermediate volumes used for calculations
 intermediateVolTable(siteNo,StormStart,StormEnd,tableOut)
 
+#######################################################################################################
 # OPTIONAL if sample(s) need to be removed, enter their datetime and a comment and re-create tableOut
 # MUST be in the format YYYY-MM-DD HH:24
 removeDate <- c("2015-03-10 15:40:00","2015-03-10 16:55:00","2015-03-12 14:10:00","2015-03-12 14:05:00")
 removeComment <- c("")
-tableOut <- labDataOut(adaps_data_all,StormStart,StormEnd,StormName,maxBottleVol,maxSampVol,removeDate=removeDate,subNum=subNum)
+tableOut <- labDataOutMI(adaps_data_all,StormStart,StormEnd,StormName,maxBottleVol,maxSampVol,removeDate=removeDate,subNum=subNum)
 for (i in 1:length(StormStart)){
   print(tableOut[[i]])
 }
 intermediateVolTable(siteNo,StormStart,StormEnd,tableOut)
+#######################################################################################################
 
 #Once you are satisfied with the table output
 #enter date(s) when samples were picked up 

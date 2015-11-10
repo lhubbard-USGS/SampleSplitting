@@ -50,7 +50,7 @@
 
 
 <<openLibrary, echo=FALSE>>=
-library(xtable)
+#library(xtable)
 options(continue=" ")
 options(width=60)
 library(knitr)

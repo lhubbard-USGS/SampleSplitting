@@ -1,9 +1,6 @@
 install.packages(c("googleVis"), dependencies=TRUE)
-install.packages(c("dataRetrieval"), repos="http://usgs-r.github.com")
-install.packages("devtools")
-install.packages(c("SampleSplitting"), repos="http://usgs-r.github.com")
-install.packages(c("USGSwsData", "USGSwsBase", "USGSwsGraphs", "USGSwsStats", "USGSwsQW"), repos="http://usgs-r.github.com")
-install.packages(c("XML", "digest", "memoise", "lubridate", "akima", "leaps", "car", "mvtnorm", "relimp", "BSDA", "RODBC"), dependencies=TRUE)
+install.packages("dataRetrieval")
+install.packages(c("SampleSplitting"), repos=c("http://owi.usgs.gov/R",getOption("repos")))
 ########################################################################################################
 library(SampleSplitting)
 library(dataRetrieval)

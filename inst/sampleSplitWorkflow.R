@@ -1,7 +1,7 @@
 # Do only once:
 install.packages(c("googleVis"), dependencies=TRUE)
-install.packages(c("dataRetrieval"), dependencies=TRUE)
-install.packages(c("SampleSplitting"), repos="http://usgs-r.github.com",type="source")
+install.packages("dataRetrieval")
+install.packages(c("SampleSplitting"), repos=c("http://owi.usgs.gov/R",getOption("repos")))
 #############################################
 library(SampleSplitting)
 library(dataRetrieval)

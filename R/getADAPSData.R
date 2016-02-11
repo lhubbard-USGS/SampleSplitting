@@ -13,10 +13,12 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' siteNo <- "424314090240601"
-#' StartDt <- '2008-05-30'
-#' EndDt <- '2008-06-15'
-#' getADAPSData(siteNo,StartDt,EndDt,siteNo,dataFile,tzCode="America/Chicago")
+#' siteNo <- "424421077495301"
+#' StartDt <- '2016-02-03'
+#' EndDt <- '2016-02-03'
+#' precipSite <- "424421077495301"
+#' tzCode <- "America/Jamaica"
+#' adaps_data_all <- getADAPSData(siteNo,StartDt,EndDt,precipSite,tzCode=tzCode)
 #' }
 getADAPSData <- function(siteNo,StartDt,EndDt,precipSite,dataFile="",tzCode="") {
 if (nchar(dataFile)>=3) {
@@ -52,30 +54,31 @@ POR <- paramAvailability(siteNo)
 POR <- POR[which(POR$service=="uv"&POR$parameter_cd %in% c("00060","00065","99234")),]
 PORprecip <- paramAvailability(precipSite)
 PORprecip <- PORprecip[which(PORprecip$service=="uv"&PORprecip$parameter_cd=="00045"),]
+setAccess("internal")
 if ((length(unique(POR$parameter_cd)))+(length(unique(PORprecip$parameter_cd)))>=4) {
   if (max(POR$startDate[which(POR$service=="uv"&POR$parameter_cd %in% c("00060","00065"))])<=StartDt&min(POR$endDate[which(POR$service=="uv"&POR$parameter_cd %in% c("00060","00065"))])>=EndDt) {
     if (as.Date(StartDt,"%Y-%m-%d")<=(Sys.Date()-120)) {type<-"uv"} else {type<-"iv"}
     stage_url <- constructNWISURL(siteNo,'00065',StartDt,EndDt,type,format="tsv")
-    stage_url <- paste(stage_url,"&access=",max(POR$status[which(POR$parameter_cd=="00065")]),sep="")
+    # stage_url <- paste(stage_url,"&access=",max(POR$status[which(POR$parameter_cd=="00065")]),sep="")
     adaps_stage_in <- importRDB1(stage_url,asDateTime=TRUE,tz=tzCode)
     colnames(adaps_stage_in) <- c("agency_cd","site_no","datetime","tz_cd","p00065","p00065_cd")
     disch_url <- constructNWISURL(siteNo,'00060',StartDt,EndDt,type,format="tsv")
-    disch_url <- paste(disch_url,"&access=",max(POR$status[which(POR$parameter_cd=="00060")]),sep="")
+    # disch_url <- paste(disch_url,"&access=",max(POR$status[which(POR$parameter_cd=="00060")]),sep="")
     adaps_disch_in <- importRDB1(disch_url,asDateTime=TRUE,tz=tzCode)
     colnames(adaps_disch_in) <- c("agency_cd","site_no","datetime","tz_cd","p00060","p00060_cd")
     if (siteNo!=precipSite) {
       precip_url <- constructNWISURL(precipSite,'00045',StartDt,EndDt,type,format="tsv")
-      precip_url <- paste(precip_url,"&access=",max(PORprecip$status),sep="")
+      # precip_url <- paste(precip_url,"&access=",max(PORprecip$status),sep="")
       adaps_precip_in <- importRDB1(precip_url,asDateTime=TRUE,tz=tzCode)
       colnames(adaps_precip_in) <- c("agency_cd","site_no","datetime","tz_cd","p00045","p00045_cd")
     } else {
       precip_url <- constructNWISURL(precipSite,'00045',StartDt,EndDt,type,format="tsv")
-      precip_url <- paste(precip_url,"&access=",max(PORprecip$status),sep="")
+      # precip_url <- paste(precip_url,"&access=",max(PORprecip$status),sep="")
       adaps_precip_in <- importRDB1(precip_url,asDateTime=TRUE,tz=tzCode)
       colnames(adaps_precip_in) <- c("agency_cd","site_no","datetime","tz_cd","p00045","p00045_cd")
     }
     scode_url <- constructNWISURL(siteNo,'99234',StartDt,EndDt,type,format="tsv")
-    scode_url <- paste(scode_url,"&access=",max(POR$status[which(POR$parameter_cd=="99234")]),sep="")
+    # scode_url <- paste(scode_url,"&access=",max(POR$status[which(POR$parameter_cd=="99234")]),sep="")
     adaps_scode_in <- importRDB1(scode_url,asDateTime=TRUE,tz=tzCode)
     colnames(adaps_scode_in) <- c("agency_cd","site_no","datetime","tz_cd","p99234","p99234_cd")
     adaps_scode_in <- subset(adaps_scode_in,adaps_scode_in$p99234>900)

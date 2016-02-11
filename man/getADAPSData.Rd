@@ -27,10 +27,12 @@ This function accepts an NWIS gage site id, an NWIS precip site id, a StartDate,
 }
 \examples{
 \dontrun{
-siteNo <- "424314090240601"
-StartDt <- '2008-05-30'
-EndDt <- '2008-06-15'
-getADAPSData(siteNo,StartDt,EndDt,siteNo,dataFile,tzCode="America/Chicago")
+siteNo <- "424421077495301"
+StartDt <- '2016-02-03'
+EndDt <- '2016-02-03'
+precipSite <- "424421077495301"
+tzCode <- "America/Jamaica"
+adaps_data_all <- getADAPSData(siteNo,StartDt,EndDt,precipSite,tzCode=tzCode)
 }
 }
 

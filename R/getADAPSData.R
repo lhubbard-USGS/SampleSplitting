@@ -54,7 +54,10 @@ POR <- paramAvailability(siteNo)
 POR <- POR[which(POR$service=="uv"&POR$parameter_cd %in% c("00060","00065","99234")),]
 PORprecip <- paramAvailability(precipSite)
 PORprecip <- PORprecip[which(PORprecip$service=="uv"&PORprecip$parameter_cd=="00045"),]
-setAccess("internal")
+if(is.null(getOption("Access.dataRetrieval"))){
+  setAccess("internal")
+}
+
 if ((length(unique(POR$parameter_cd)))+(length(unique(PORprecip$parameter_cd)))>=4) {
   if (max(POR$startDate[which(POR$service=="uv"&POR$parameter_cd %in% c("00060","00065"))])<=StartDt&min(POR$endDate[which(POR$service=="uv"&POR$parameter_cd %in% c("00060","00065"))])>=EndDt) {
     if (as.Date(StartDt,"%Y-%m-%d")<=(Sys.Date()-120)) {type<-"uv"} else {type<-"iv"}

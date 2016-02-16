@@ -18,6 +18,9 @@ stormEventsTable <- function(StormName,StormStart,StormEnd,tableOut,maxBottleVol
   for (i in 1:length(StormName)) {
     if (!is.na(tableOut[[i]][1,2])) {
     cat(StormName[i],"\t",strftime(StormStart[i],format="%Y-%m-%d %H:%M"),"\t",strftime(StormEnd[i],format="%Y-%m-%d %H:%M"),"\n\n")
+    tableOut[[i]][,"datetime"] <- strftime(tableOut[[i]][,"datetime"],format="%Y-%m-%d %H:%M %z")
+    tableOut[[i]][,"sampStar"] <- strftime(tableOut[[i]][,"sampStar"],format="%Y-%m-%d %H:%M")
+    tableOut[[i]][,"sampEnd"] <- strftime(tableOut[[i]][,"sampEnd"],format="%Y-%m-%d %H:%M")
     print(tableOut[[i]],row.names=FALSE)
     cat("\n\n")
     cat("Lab Sample Volume","\t",sum(tableOut[[i]]$mL),"mL\t",sum(tableOut[[i]]$perc),"percent\n\n")

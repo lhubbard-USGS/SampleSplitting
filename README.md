@@ -14,6 +14,9 @@ Restart R!
 install.packages("SampleSplitting")
 ```
 
+Or use GRAN.
+
+
 An example workflow script is available at https://github.com/USGS-R/SampleSplitting/blob/master/inst/sampleSplitWorkflow.R or in your R package library (eg C:\Users\jlthomps\Documents\R\win-library\2.14\SampleSplitting\sampleSplitWorkflow.R)
 
 Explanation of the calculations in the labDataOut function follow:
